@@ -1,0 +1,21 @@
+{
+  "super_admin": "super_admin",
+  "user": {
+    "view": "user_view",
+    "create": "user_create",
+    "edit": "user_edit",
+    "delete": "user_delete"
+  },
+  "entity": {
+    "create": "entity_create"
+  },
+  "electronic_bill": {
+    "create": "electronic_bill_create"
+  },
+  "item": {
+    "create": "item_create"
+  },
+  "third": {
+    "create": "third_create"
+  }
+}
