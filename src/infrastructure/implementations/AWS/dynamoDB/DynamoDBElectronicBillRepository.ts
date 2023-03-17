@@ -21,27 +21,17 @@ export class DynamoDBElectronicBillRepository implements ElectronicBillRepositor
       Item: marshall({
         entityId: bill.entityId ?? '',
         userId: bill.userId ?? '',
-        plemsiApiKey: bill.plemsiApiKey ?? '',
+        number: Number(bill.number) ?? 0,
         date: bill.date ?? '',
-        time: bill.time ?? '',
-        prefix: bill.prefix ?? '',
-        number: bill.number ?? 0,
         orderReference: bill.orderReference ?? undefined,
-        send_email: bill.send_email ?? false,
-        customer: bill.customer ?? undefined,
-        payment: bill.payment ?? undefined,
+        third: bill.third ?? undefined,
+        wayToPay: bill.wayToPay ?? undefined,
         items: bill.items ?? undefined,
-        resolution: bill.resolution ?? '',
-        resolutionText: bill.resolutionText ?? '',
-        head_note: bill.head_note ?? '',
-        foot_note: bill.foot_note ?? '',
-        notes: bill.notes ?? '',
-        invoiceBaseTotal: bill.invoiceBaseTotal ?? 0,
-        invoiceTaxExclusiveTotal: bill.invoiceTaxExclusiveTotal ?? 0,
-        invoiceTaxInclusiveTotal: bill.invoiceTaxInclusiveTotal ?? 0,
-        allTaxTotals: bill.allTaxTotals ?? undefined,
-        totalToPay: bill.totalToPay ?? 0,
-        finalTotalToPay: bill.finalTotalToPay ?? 0
+        note: bill.note ?? '',
+        allTaxTotals: bill.taxes ?? undefined,
+        total: bill.total ?? 0,
+        totalTaxes: bill.totalTaxes ?? 0,
+        totalToPay: bill.totalToPay ?? 0
       })
     }
     await this.client.send(new PutItemCommand(params))

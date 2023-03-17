@@ -1,50 +1,48 @@
 import { ElectronicBillRepository } from '../../../domain/repositories/ElectronicBill.repository'
+import { EntityRepository } from '../../../domain/repositories/Entity.repository'
 import { ElectronicBill } from '../../../domain/entities/ElectronicBill.entity'
 import { BillPlemsiService } from '../../../domain/services/electronicBill/BillPlemsi.service'
+import { GetEntityByIdService } from '../../../domain/services/entity/GetEntityById.service'
 import { UnhandledException } from '../../../domain/exceptions/common/Unhandled.exception'
+import { electronicBillPlemsiMapper } from '../../../domain/mappers/ElectronicBill/electronicBill.mapper'
 
 export class ElectronicBillCreatorUseCase {
   private readonly _electronicBillRepository: ElectronicBillRepository
+  private readonly _entityRepository: EntityRepository
   private readonly _billPlemsiService: BillPlemsiService
+  private readonly _getEntityByIdService: GetEntityByIdService
 
-  constructor (electronicBillRepository: ElectronicBillRepository) {
+  constructor (electronicBillRepository: ElectronicBillRepository, entityRepository: EntityRepository) {
     this._electronicBillRepository = electronicBillRepository
+    this._entityRepository = entityRepository
     this._billPlemsiService = new BillPlemsiService()
+    this._getEntityByIdService = new GetEntityByIdService(entityRepository)
   }
 
   async run (bill: ElectronicBill): Promise<ElectronicBill> {
     try {
-      const apiKey = bill.plemsiApiKey || ''
-      const billResponse = await this._billPlemsiService.run({
-        date: bill.date,
-        time: bill.time,
-        prefix: bill.prefix,
-        number: bill.number,
-        orderReference: bill.orderReference,
-        send_email: bill.send_email,
-        customer: bill.customer,
-        payment: bill.payment,
-        items: bill.items,
-        resolution: bill.resolution,
-        resolutionText: bill.resolutionText,
-        head_note: bill.head_note,
-        foot_note: bill.foot_note,
-        notes: bill.notes,
-        invoiceBaseTotal: bill.invoiceBaseTotal,
-        invoiceTaxExclusiveTotal: bill.invoiceTaxExclusiveTotal,
-        invoiceTaxInclusiveTotal: bill.invoiceTaxInclusiveTotal,
-        allTaxTotals: bill.allTaxTotals,
-        totalToPay: bill.totalToPay,
-        finalTotalToPay: bill.finalTotalToPay
-      }, apiKey)
-  
-      if (billResponse.status === 200 || billResponse.status === 201) {
-        await this._electronicBillRepository.save(bill)
+      const entity = await this._getEntityByIdService.run(bill.entityId || '')
+
+      if (entity) {
+        const number = entity.lastElectronicBillNumber ? Number(entity.lastElectronicBillNumber + 1) : 0
+        bill.number = number
+        const dataPlemsi = electronicBillPlemsiMapper(bill, {
+          resolution: entity.resolution ?? '',
+          resolutionText: entity.resolutionText ?? ''
+        })
+        await Promise.all([
+          this._billPlemsiService.run(dataPlemsi, entity.apiKeyPlemsi ?? ''),
+          this._electronicBillRepository.save(bill),
+          this._entityRepository.update({
+            ...entity,
+            lastElectronicBillNumber: number
+          })
+        ])
+        return bill
       } else {
-        throw new UnhandledException(`Respuesta de API con estatus: ${billResponse.status}`)
+        throw 'No se encontró la entidad'
       }
   
-      return bill
     } catch (error) {
       throw new UnhandledException(`Problema en el facturador, error: ${error}`)
     }

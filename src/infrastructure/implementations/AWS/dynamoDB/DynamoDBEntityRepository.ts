@@ -30,7 +30,8 @@ export class DynamoDBEntityRepository implements EntityRepository {
         apiKeyPlemsi: entity.apiKeyPlemsi ?? null,
         state: entity.state ?? '',
         resolution: entity.resolution ?? null,
-        resolutionText: entity.resolutionText ?? null
+        resolutionText: entity.resolutionText ?? null,
+        lastElectronicBillNumber: entity.lastElectronicBillNumber ?? null
       })
     }
     await this.client.send(new PutItemCommand(params))
@@ -131,7 +132,8 @@ export class DynamoDBEntityRepository implements EntityRepository {
         })
         : undefined,
       resolution: item.resolution.S ?? undefined,
-      resolutionText: item.resolutionText.S ?? undefined
+      resolutionText: item.resolutionText.S ?? undefined,
+      lastElectronicBillNumber: Number(item.lastElectronicBillNumber.N) ?? undefined
     }
 
     return entity
@@ -204,34 +206,37 @@ export class DynamoDBEntityRepository implements EntityRepository {
         })
         : undefined,
       resolution: item.resolution.S ?? undefined,
-      resolutionText: item.resolutionText.S ?? undefined
+      resolutionText: item.resolutionText.S ?? undefined,
+      lastElectronicBillNumber: Number(item.lastElectronicBillNumber.N) ?? undefined
     }
 
     return entity
   }
-  /*
-  async update(user: Entity): Promise<Entity> {
+  
+  async update(entity: Entity): Promise<Entity> {
     const params = {
-      TableName: `${this._project}-${this._environment}-Users`,
+      TableName: `${this._project}-${this._environment}-${this._table}`,
       Item: marshall({
-        id: user.id,
-        email: user.email,
-        password: user.password,
-        name: user.name,
-        lastname: user.lastname,
-        entityId: user.entityId,
-        state: user.state,
-        permissions: user.permissions
-      },
-        {
-          removeUndefinedValues: true
-        })
+        id: entity.id ?? '',
+        name: entity.name ?? '',
+        entityTypeCode: entity.entityTypeCode ?? '',
+        document: entity.document ?? '',
+        signatories: entity.signatories ?? null,
+        address: entity.address ?? null,
+        email: entity.email ?? '',
+        phone: entity.phone ?? null,
+        apiKeyPlemsi: entity.apiKeyPlemsi ?? null,
+        state: entity.state ?? '',
+        resolution: entity.resolution ?? null,
+        resolutionText: entity.resolutionText ?? null,
+        lastElectronicBillNumber: entity.lastElectronicBillNumber ?? null
+      })
     }
     await this.client.send(new PutItemCommand(params))
 
-    return user
+    return entity
   }
-  */
+
   /*
   async delete(id: string): Promise<void> {
     const params = {

@@ -29,7 +29,10 @@ export const createItem = async (req: Request, res: Response, next: NextFunction
       entityId: session.data.entityId,
       code,
       description,
-      unitMeasure,
+      unitMeasure:{
+        code: Number(unitMeasure.code),
+        description: unitMeasure.description
+      },
       price
     })
 

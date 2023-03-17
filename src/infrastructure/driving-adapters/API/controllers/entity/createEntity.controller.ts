@@ -16,7 +16,10 @@ export const createEntity = async (req: Request, res: Response, next: NextFuncti
     email,
     phone,
     apiKeyPlemsi,
-    state
+    state,
+    resolution,
+    resolutionText,
+    lastElectronicBillNumber
   } = req.body
 
   const { sessionUser } = req.params
@@ -41,7 +44,10 @@ export const createEntity = async (req: Request, res: Response, next: NextFuncti
       email,
       phone,
       apiKeyPlemsi,
-      state: state || 'ACTIVE'
+      state: state || 'ACTIVE',
+      resolution,
+      resolutionText,
+      lastElectronicBillNumber
     })
 
     res.json(entityCreated)

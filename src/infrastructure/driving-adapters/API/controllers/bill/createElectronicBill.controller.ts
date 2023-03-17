@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { DynamoDBElectronicBillRepository } from '../../../../implementations/AWS/dynamoDB/DynamoDBElectronicBillRepository'
+import { DynamoDBEntityRepository } from '../../../../implementations/AWS/dynamoDB/DynamoDBEntityRepository'
 import { ElectronicBillCreatorUseCase  } from '../../../../../application/useCases/ElectronicBillCreator'
 import { validatePermission } from '../../utils'
 import permissionsList from '../../permission.json'
@@ -11,24 +12,24 @@ export const createElectronicBill = async (req: Request, res: Response, next: Ne
   const {
     date,
     orderReference,
-    customer,
-    payment,
+    third,
+    wayToPay,
+    paymentMethod,
+    paymentDueDate,
+    municipality,
+    note,
     items,
-    head_note,
-    foot_note,
-    notes,
-    invoiceBaseTotal,
-    invoiceTaxExclusiveTotal,
-    invoiceTaxInclusiveTotal,
-    allTaxTotals,
+    taxes,
+    total,
+    totalTaxes,
     totalToPay,
-    finalTotalToPay
   } = req.body
 
   const { sessionUser } = req.params
 
   const dynamoDBElectronicBillRepository = new DynamoDBElectronicBillRepository()
-  const electronicBillCreatorUseCase = new ElectronicBillCreatorUseCase (dynamoDBElectronicBillRepository)
+  const dynamoDBEntityRepository = new DynamoDBEntityRepository()
+  const electronicBillCreatorUseCase = new ElectronicBillCreatorUseCase (dynamoDBElectronicBillRepository, dynamoDBEntityRepository)
 
   try {
     const session = JSON.parse(sessionUser)
@@ -37,29 +38,21 @@ export const createElectronicBill = async (req: Request, res: Response, next: Ne
     if (!havePermission) throw new PermissionNotAvailableException()
 
     const billCreated = await electronicBillCreatorUseCase.run({
-      entityId: session.entityId,
-      userId: session.id,
-      plemsiApiKey: session.plemsiApiKey,
+      entityId: session.data.entityId,
+      userId: session.data.id,
       date,
-      time: '00:00:00',
-      prefix: prefixPlemsi,
-      number: 1,
       orderReference,
-      send_email: true,
-      customer,
-      payment,
+      third,
+      wayToPay,
+      paymentMethod,
+      paymentDueDate,
+      municipality,
+      note,
       items,
-      resolution: '',
-      resolutionText: '',
-      head_note,
-      foot_note,
-      notes,
-      invoiceBaseTotal,
-      invoiceTaxExclusiveTotal,
-      invoiceTaxInclusiveTotal,
-      allTaxTotals,
-      totalToPay,
-      finalTotalToPay
+      taxes,
+      total,
+      totalTaxes,
+      totalToPay
     })
 
     res.json(billCreated)
