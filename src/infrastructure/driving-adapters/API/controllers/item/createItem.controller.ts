@@ -10,7 +10,8 @@ export const createItem = async (req: Request, res: Response, next: NextFunction
     code,
     description,
     unitMeasure,
-    price
+    price,
+    itemType
   } = req.body
 
   const { sessionUser } = req.params
@@ -33,7 +34,11 @@ export const createItem = async (req: Request, res: Response, next: NextFunction
         code: Number(unitMeasure.code),
         description: unitMeasure.description
       },
-      price
+      price,
+      itemType: {
+        code: Number(itemType.code),
+        description: itemType.description
+      }
     })
 
     res.json(itemCreated)

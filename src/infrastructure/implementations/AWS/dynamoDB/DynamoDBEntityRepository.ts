@@ -75,6 +75,8 @@ export class DynamoDBEntityRepository implements EntityRepository {
       TableName: `${this._project}-${this._environment}-${this._table}`,
       Key: marshall({
         id
+      }, {
+        removeUndefinedValues: true
       })
     }
     const response = await this.client.send(new GetItemCommand(params))
@@ -90,20 +92,12 @@ export class DynamoDBEntityRepository implements EntityRepository {
       address: item.address.M !== undefined
         ?
           {
-            street: item.address.M.street.S ?? '',
-            number: item.address.M.number.S ?? '',
-            province: item.address.M.province.M !== undefined 
+            description: item.address.M.description.S ?? '',
+            city: item.address.M.city.M !== undefined 
               ?
                 {
-                  code: item.address.M.province.M.code.S ?? '',
-                  description: item.address.M.province.M.description.S ?? ''
-                }
-              : { code: '', description: '' },
-            country: item.address.M.country.M !== undefined 
-              ?
-                {
-                  code: item.address.M.country.M.code.S ?? '',
-                  description: item.address.M.country.M.description.S ?? ''
+                  code: item.address.M.city.M.code.S ?? '',
+                  description: item.address.M.city.M.description.S ?? ''
                 }
               : { code: '', description: '' },
           }
@@ -119,14 +113,20 @@ export class DynamoDBEntityRepository implements EntityRepository {
               name: signatory.M.name.S ?? '',
               lastname: signatory.M.lastname.S ?? '',
               document: signatory.M.document.S ?? '',
-              documentType: signatory.M.documentType.S ?? ''
+              documentType: {
+                code: signatory.M.documentType?.M?.code?.S ?? '',
+                description: signatory.M.documentType?.M?.description?.S ?? '',
+              }
             }
           } else {
             return {
               name: '',
               lastname: '',
               document: '',
-              documentType: ''
+              documentType: {
+                code: '',
+                description: ''
+              }
             }
           }
         })
@@ -164,20 +164,12 @@ export class DynamoDBEntityRepository implements EntityRepository {
       address: item.address.M !== undefined
         ?
           {
-            street: item.address.M.street.S ?? '',
-            number: item.address.M.number.S ?? '',
-            province: item.address.M.province.M !== undefined 
+            description: item.address.M.description.S ?? '',
+            city: item.address.M.city?.M !== undefined 
               ?
                 {
-                  code: item.address.M.province.M.code.S ?? '',
-                  description: item.address.M.province.M.description.S ?? ''
-                }
-              : { code: '', description: '' },
-            country: item.address.M.country.M !== undefined 
-              ?
-                {
-                  code: item.address.M.country.M.code.S ?? '',
-                  description: item.address.M.country.M.description.S ?? ''
+                  code: item.address.M.city.M.code.S ?? '',
+                  description: item.address.M.city.M.description.S ?? ''
                 }
               : { code: '', description: '' },
           }
@@ -193,14 +185,20 @@ export class DynamoDBEntityRepository implements EntityRepository {
               name: signatory.M.name.S ?? '',
               lastname: signatory.M.lastname.S ?? '',
               document: signatory.M.document.S ?? '',
-              documentType: signatory.M.documentType.S ?? ''
+              documentType: {
+                code: signatory.M.documentType?.M?.code?.S ?? '',
+                description: signatory.M.documentType?.M?.description?.S ?? '',
+              }
             }
           } else {
             return {
               name: '',
               lastname: '',
               document: '',
-              documentType: ''
+              documentType: {
+                code: '',
+                description: ''
+              }
             }
           }
         })

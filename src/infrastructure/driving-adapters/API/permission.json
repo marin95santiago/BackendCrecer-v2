@@ -13,9 +13,11 @@
     "create": "electronic_bill_create"
   },
   "item": {
+    "view": "item_view",
     "create": "item_create"
   },
   "third": {
+    "view": "third_view",
     "create": "third_create"
   }
 }

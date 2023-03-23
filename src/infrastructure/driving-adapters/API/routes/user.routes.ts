@@ -14,7 +14,7 @@ const route = Router()
 route.delete('/:userId', validateToken, deleteUserController)
 route.put('/:userId', validateToken, updateUserController)
 route.get('', validateToken, getAllUsersController)
-route.get('/:userId', validateToken, getUserByIdController)
+route.get('/:userId', getUserByIdController)
 route.post('', createUserController)
 
 export default route

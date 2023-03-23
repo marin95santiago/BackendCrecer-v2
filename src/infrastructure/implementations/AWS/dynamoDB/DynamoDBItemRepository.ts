@@ -32,7 +32,8 @@ export class DynamoDBItemRepository implements ItemRepository {
         code: item.code ?? '',
         description: item.description ?? '',
         price: item.price ?? null,
-        unitMeasure: item.unitMeasure ?? null
+        unitMeasure: item.unitMeasure ?? null,
+        itemType: item.itemType ?? null
       })
     }
 
@@ -41,9 +42,15 @@ export class DynamoDBItemRepository implements ItemRepository {
     return item
   }
 
-  async getAll(): Promise<Item[]> {
+  async getAll(entityId: string): Promise<Item[]> {
     const params = {
-      TableName: `${this._project}-${this._environment}-${this._table}`
+      TableName: `${this._project}-${this._environment}-${this._table}`,
+      FilterExpression: 'entityId = :entityId',
+      ExpressionAttributeValues: {
+        ':entityId': {
+          S: entityId
+        }
+      }
     }
     const response = await this.client.send(new ScanCommand(params))
 
@@ -54,12 +61,19 @@ export class DynamoDBItemRepository implements ItemRepository {
         entityId: item.entityId.S ?? '',
         code: item.code.S ?? '',
         description: item.description.S ?? '',
-        price: Number(item.price.N) ?? undefined,
+        price: Number(item.price.S) ?? undefined,
         unitMeasure: item.unitMeasure.M !== undefined
           ?
             {
               code: Number(item.unitMeasure.M.code.N) ?? 0,
               description: item.unitMeasure.M.description.S ?? ''
+            }
+          : undefined,
+        itemType: item.itemType?.M !== undefined
+          ?
+            {
+              code: Number(item.itemType.M.code.N) ?? 0,
+              description: item.itemType.M.description.S ?? ''
             }
           : undefined
       }
@@ -87,12 +101,19 @@ export class DynamoDBItemRepository implements ItemRepository {
       entityId: itemDB.entityId.S ?? '',
       code: itemDB.code.S ?? '',
       description: itemDB.code.S ?? '',
-      price: Number(itemDB.price.N) ?? undefined,
+      price: Number(itemDB.price.S) ?? undefined,
       unitMeasure: itemDB.unitMeasure.M !== undefined
         ?
           {
             code: Number(itemDB.unitMeasure.M.code.N) ?? 0,
             description: itemDB.unitMeasure.M.description.S ?? ''
+          }
+        : undefined,
+      itemType: itemDB.itemType?.M !== undefined
+        ?
+          {
+            code: Number(itemDB.itemType.M.code.N) ?? 0,
+            description: itemDB.itemType.M.description.S ?? ''
           }
         : undefined
     }

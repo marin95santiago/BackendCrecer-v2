@@ -19,7 +19,7 @@ export class ElectronicBillCreatorUseCase {
     this._getEntityByIdService = new GetEntityByIdService(entityRepository)
   }
 
-  async run (bill: ElectronicBill): Promise<ElectronicBill> {
+  async run (bill: ElectronicBill): Promise<{ data: ElectronicBill, entityInformation: { apikey: string, number: number }}> {
     try {
       const entity = await this._getEntityByIdService.run(bill.entityId || '')
 
@@ -38,7 +38,7 @@ export class ElectronicBillCreatorUseCase {
             lastElectronicBillNumber: number
           })
         ])
-        return bill
+        return { data: bill, entityInformation: { apikey: entity.apiKeyPlemsi ?? '', number: number }}
       } else {
         throw 'No se encontró la entidad'
       }

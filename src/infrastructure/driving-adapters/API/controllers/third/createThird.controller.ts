@@ -18,6 +18,7 @@ export const createThird = async (req: Request, res: Response, next: NextFunctio
     lastname,
     phone,
     address,
+    city,
     email
   } = req.body
 
@@ -46,6 +47,7 @@ export const createThird = async (req: Request, res: Response, next: NextFunctio
       lastname,
       phone,
       address,
+      city,
       email
     })
 

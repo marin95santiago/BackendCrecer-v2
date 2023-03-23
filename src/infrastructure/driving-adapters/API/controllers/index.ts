@@ -6,6 +6,8 @@ import { deleteUser } from './user/deleteUser.controller'
 
 // Entities
 import { createEntity } from './entity/createEntity.controller'
+import { getAllEntities } from './entity/getAllEntities.controller'
+import { getEntityById } from './entity/getEntityById.controller'
 
 // Login controller
 import { login } from './login/login.controller'
@@ -28,6 +30,8 @@ export {
   updateUser as updateUserController,
   deleteUser as deleteUserController,
   createEntity as createEntityController,
+  getAllEntities as getAllEntitiesController,
+  getEntityById as getEntityByIdController,
   login as loginController,
   createElectronicBill as createElectronicBillController,
   createItem as createItemController,

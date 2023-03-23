@@ -1,6 +1,6 @@
 import path from 'path'
 import * as dotenv from 'dotenv'
-import { DynamoDBClient, PutItemCommand, ScanCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, PutItemCommand, ScanCommand, QueryCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { ThirdRepository } from '../../../../domain/repositories/Third.repository'
 import { Third } from '../../../../domain/entities/Third.entity'
@@ -40,6 +40,7 @@ export class DynamoDBThirdRepository implements ThirdRepository {
         businessName: third.businessName ?? null,
         phone: third.phone ?? null,
         address: third.address ?? null,
+        city: third.city ?? null,
         email: third.email ?? null
       })
     }
@@ -49,10 +50,17 @@ export class DynamoDBThirdRepository implements ThirdRepository {
     return third
   }
 
-  async getAll(): Promise<Third[]> {
+  async getAll(entityId: string): Promise<Third[]> {
     const params = {
-      TableName: `${this._project}-${this._environment}-${this._table}`
+      TableName: `${this._project}-${this._environment}-${this._table}`,
+      FilterExpression: 'entityId = :entityId',
+      ExpressionAttributeValues: {
+        ':entityId': {
+          S: entityId
+        }
+      }
     }
+
     const response = await this.client.send(new ScanCommand(params))
 
     const items = (response.Items !== undefined) ? response.Items : []
@@ -95,6 +103,13 @@ export class DynamoDBThirdRepository implements ThirdRepository {
         businessName: item.businessName.S ?? undefined,
         phone: item.phone.S ?? '',
         address: item.address.S ?? '',
+        city: item.city?.M !== undefined
+          ?
+            {
+              code: item.city.M.code.S ?? '',
+              description: item.city.M.description.S ?? ''
+            }
+          : undefined,
         email: item.email.S ?? ''
       }
     })
@@ -154,6 +169,13 @@ export class DynamoDBThirdRepository implements ThirdRepository {
       businessName: item.businessName.S ?? undefined,
       phone: item.phone.S ?? '',
       address: item.address.S ?? '',
+      city: item.city?.M !== undefined
+        ?
+          {
+            code: item.city.M.code.S ?? '',
+            description: item.city.M.description.S ?? ''
+          }
+        : undefined,
       email: item.email.S ?? ''
     }
 

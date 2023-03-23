@@ -2,17 +2,15 @@ export interface Signatory {
   name: string
   lastname: string
   document: string
-  documentType: string
-}
-
-export interface Address {
-  street: string
-  number: string
-  province: {
+  documentType: {
     code: string
     description: string
   }
-  country: {
+}
+
+export interface Address {
+  description: string
+  city: {
     code: string
     description: string
   }

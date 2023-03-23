@@ -33,7 +33,7 @@ export function electronicBillPlemsiMapper(bill: ElectronicBill, entityData: Ent
       type_document_identification_id: Number(bill.third.documentType.code) ?? 0,
       type_organization_id: Number(bill.third.organizationType.code) ?? 0,
       type_liability_id: Number(bill.third.liabilityType.code) ?? 0,
-      municipality_id: 635,
+      municipality_id: Number(bill.third.city?.code) ?? 0,
       type_regime_id: Number(bill.third.regimeType.code)
     },
     payment: {
