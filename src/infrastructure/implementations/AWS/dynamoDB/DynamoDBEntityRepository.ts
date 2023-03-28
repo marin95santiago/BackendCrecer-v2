@@ -89,7 +89,7 @@ export class DynamoDBEntityRepository implements EntityRepository {
       name: item.name.S ?? '',
       entityTypeCode: item.entityTypeCode.S ?? '',
       document: item.document.S ?? '',
-      address: item.address.M !== undefined
+      address: item.address?.M !== undefined
         ?
           {
             description: item.address.M.description.S ?? '',
@@ -161,7 +161,7 @@ export class DynamoDBEntityRepository implements EntityRepository {
       name: item.name.S ?? '',
       entityTypeCode: item.entityTypeCode.S ?? '',
       document: item.document.S ?? '',
-      address: item.address.M !== undefined
+      address: item.address?.M !== undefined
         ?
           {
             description: item.address.M.description.S ?? '',
