@@ -13,10 +13,10 @@ export const getAllThirds = async (req: Request, res: Response, next: NextFuncti
   try {
     const session = JSON.parse(sessionUser)
     const doesSuperAdminHavePermission = true
-    const havePermission = validatePermission(permissionsList.third.view, session.data.permissions, doesSuperAdminHavePermission)
+    const havePermission = validatePermission(permissionsList.third.view, session.data.user.permissions, doesSuperAdminHavePermission)
 
     if (!havePermission) throw new PermissionNotAvailableException()
-    const thirds = await thirdGetterUseCase.run(session.data.entityId)
+    const thirds = await thirdGetterUseCase.run(session.data.user.entityId)
     res.json(thirds)
     return
   } catch (e) { 

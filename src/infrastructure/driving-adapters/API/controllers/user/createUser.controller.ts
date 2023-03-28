@@ -25,7 +25,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     /*
     const session = JSON.parse(sessionUser)
     const doesSuperAdminHavePermission = true
-    const havePermission = validatePermission(permissionsList.user.user_create, session.data.permissions, doesSuperAdminHavePermission)
+    const havePermission = validatePermission(permissionsList.user.user_create, session.data.user.permissions, doesSuperAdminHavePermission)
 
     if (!havePermission) throw new PermissionNotAvailableException()
     */

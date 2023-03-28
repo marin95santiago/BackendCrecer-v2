@@ -34,12 +34,12 @@ export const createElectronicBill = async (req: Request, res: Response, next: Ne
   try {
     const session = JSON.parse(sessionUser)
     const doesSuperAdminHavePermission = true
-    const havePermission = validatePermission(permissionsList.electronic_bill.create, session.data.permissions, doesSuperAdminHavePermission)
+    const havePermission = validatePermission(permissionsList.electronic_bill.create, session.data.user.permissions, doesSuperAdminHavePermission)
     if (!havePermission) throw new PermissionNotAvailableException()
 
     const billCreated = await electronicBillCreatorUseCase.run({
-      entityId: session.data.entityId,
-      userId: session.data.id,
+      entityId: session.data.user.entityId,
+      userId: session.data.user.id,
       date,
       orderReference,
       third,

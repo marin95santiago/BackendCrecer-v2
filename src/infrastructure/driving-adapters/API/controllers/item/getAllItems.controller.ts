@@ -13,10 +13,10 @@ export const getAllItems = async (req: Request, res: Response, next: NextFunctio
   try {
     const session = JSON.parse(sessionUser)
     const doesSuperAdminHavePermission = true
-    const havePermission = validatePermission(permissionsList.item.view, session.data.permissions, doesSuperAdminHavePermission)
+    const havePermission = validatePermission(permissionsList.item.view, session.data.user.permissions, doesSuperAdminHavePermission)
     if (!havePermission) throw new PermissionNotAvailableException()
 
-    const items = await itemGetterUseCase.run(session.data.entityId)
+    const items = await itemGetterUseCase.run(session.data.user.entityId)
     res.json(items)
     return
   } catch (e) {

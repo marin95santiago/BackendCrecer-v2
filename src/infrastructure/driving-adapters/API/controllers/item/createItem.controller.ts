@@ -22,12 +22,12 @@ export const createItem = async (req: Request, res: Response, next: NextFunction
   try {
     const session = JSON.parse(sessionUser)
     const doesSuperAdminHavePermission = true
-    const havePermission = validatePermission(permissionsList.item.create, session.data.permissions, doesSuperAdminHavePermission)
+    const havePermission = validatePermission(permissionsList.item.create, session.data.user.permissions, doesSuperAdminHavePermission)
 
     if (!havePermission) throw new PermissionNotAvailableException()
 
     const itemCreated = await itemCreatorUseCase.run({
-      entityId: session.data.entityId,
+      entityId: session.data.user.entityId,
       code,
       description,
       unitMeasure:{
