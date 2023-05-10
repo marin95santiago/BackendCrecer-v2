@@ -4,6 +4,7 @@ import { DynamoDBClient, PutItemCommand, ScanCommand, QueryCommand, GetItemComma
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { ThirdRepository } from '../../../../domain/repositories/Third.repository'
 import { Third } from '../../../../domain/entities/Third.entity'
+import { String } from 'aws-sdk/clients/apigateway'
 
 dotenv.config({
   path: path.resolve(__dirname, '../../../../../.env')
@@ -50,10 +51,43 @@ export class DynamoDBThirdRepository implements ThirdRepository {
     return third
   }
 
-  async getAll(entityId: string): Promise<Third[]> {
+  async update(third: Third): Promise<Third> {
     const params = {
       TableName: `${this._project}-${this._environment}-${this._table}`,
-      FilterExpression: 'entityId = :entityId',
+      Item: marshall({
+        entityId: third.entityId ?? '',
+        document: third.document ?? '',
+        dv: third.dv ?? null,
+        documentType: third.documentType ?? null,
+        organizationType: third.organizationType ?? null,
+        liabilityType: third.liabilityType ?? null,
+        regimeType: third.regimeType ?? null,
+        name: third.name ?? null,
+        lastname: third.lastname ?? null,
+        businessName: third.businessName ?? null,
+        phone: third.phone ?? null,
+        address: third.address ?? null,
+        city: third.city ?? null,
+        email: third.email ?? null
+      })
+    }
+    await this.client.send(new PutItemCommand(params))
+
+    return third
+  }
+
+  async getAll(entityId: string, limit?: number, lastEvaluatedKey?: any): Promise<{lastEvaluatedKey: any, thirds: Third[]}> {
+    const params : {
+      TableName: string
+      IndexName: string
+      KeyConditionExpression: string
+      ExpressionAttributeValues: any
+      ExclusiveStartKey?: any
+      Limit?: number
+    } = {
+      TableName: `${this._project}-${this._environment}-${this._table}`,
+      IndexName: 'entityId-index',
+      KeyConditionExpression: 'entityId = :entityId',
       ExpressionAttributeValues: {
         ':entityId': {
           S: entityId
@@ -61,11 +95,18 @@ export class DynamoDBThirdRepository implements ThirdRepository {
       }
     }
 
-    const response = await this.client.send(new ScanCommand(params))
+    if (limit !== undefined) {
+      params.Limit = limit
+    }
+
+    if (lastEvaluatedKey !== undefined) {
+      params.ExclusiveStartKey = lastEvaluatedKey
+    }
+    const response = await this.client.send(new QueryCommand(params))
 
     const items = (response.Items !== undefined) ? response.Items : []
 
-    const third = items.map((item: any) => {
+    const thirds = items.map((item: any) => {
       return {
         entityId: item.entityId.S ?? '',
         document: item.document.S ?? '',
@@ -114,7 +155,10 @@ export class DynamoDBThirdRepository implements ThirdRepository {
       }
     })
     
-    return third
+    return {
+      lastEvaluatedKey: response.LastEvaluatedKey,
+      thirds: thirds
+    }
   }
 
   async getByDocument(document: string, entityId: string): Promise<Third | null> {

@@ -30,15 +30,28 @@ export class ElectronicBillCreatorUseCase {
           resolution: entity.resolution ?? '',
           resolutionText: entity.resolutionText ?? ''
         })
-        await Promise.all([
-          this._billPlemsiService.run(dataPlemsi, entity.apiKeyPlemsi ?? ''),
-          this._electronicBillRepository.save(bill),
-          this._entityRepository.update({
-            ...entity,
-            lastElectronicBillNumber: number
-          })
-        ])
-        return { data: bill, entityInformation: { apikey: entity.apiKeyPlemsi ?? '', number: number }}
+
+        // Validate and create bill on DIAN
+        const billPlemsi = await this._billPlemsiService.run(dataPlemsi, entity.apiKeyPlemsi ?? '')
+        
+        //get url preview
+        const regex = /(https?:\/\/[^\s]+)/g
+        const matches = billPlemsi.data.data.QRCode.match(regex)
+        const url = matches ? matches[0] : undefined
+
+
+        if (billPlemsi.data.success) {
+          await Promise.all([
+            this._electronicBillRepository.save({...bill, preview: url}),
+            this._entityRepository.update({
+              ...entity,
+              lastElectronicBillNumber: number
+            })
+          ])
+          return { data: bill, entityInformation: { apikey: entity.apiKeyPlemsi ?? '', number: number }}
+        } else {
+          throw 'Error al crear la factura ante la DIAN'
+        }
       } else {
         throw 'No se encontró la entidad'
       }

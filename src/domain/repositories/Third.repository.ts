@@ -1,7 +1,8 @@
 import { Third } from 'domain/entities/Third.entity'
 
 export interface ThirdRepository {
-  getAll: (entityId: string) => Promise<Third[]>
+  getAll: (entityId: string, limit?: number, lastEvaluatedKey?: any) => Promise<{lastEvaluatedKey: any, thirds: Third[]}>
   save: (third: Third) => Promise<Third>
-  getByDocument: (code: string, entityId: string) => Promise<Third | null>
+  update: (third: Third) => Promise<Third>
+  getByDocument: (document: string, entityId: string) => Promise<Third | null>
 }
