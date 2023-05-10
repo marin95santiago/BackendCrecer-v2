@@ -61,7 +61,7 @@ export class DynamoDBElectronicBillRepository implements ElectronicBillRepositor
       entityId: item.entityId.S ?? undefined,
       userId: item.userId.S ?? undefined,
       number: Number(item.number.N) ?? undefined,
-      preview: item.preview.S ?? undefined,
+      preview: item.preview?.S ?? undefined,
       date: item.date.S ?? '',
       orderReference: item.orderReference.S ?? '',
       third: item.third.M !== undefined ? 
@@ -307,7 +307,7 @@ export class DynamoDBElectronicBillRepository implements ElectronicBillRepositor
         entityId: item.entityId.S ?? undefined,
         userId: item.userId.S ?? undefined,
         number: item.number.N ?? undefined,
-        preview: item.preview !== undefined ? item.preview.S : undefined,
+        preview: item.preview?.S ?? undefined,
         date: item.date.S ?? '',
         orderReference: item.orderReference.S ?? '',
         third: {
