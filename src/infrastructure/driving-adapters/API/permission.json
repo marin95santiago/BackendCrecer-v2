@@ -10,6 +10,7 @@
     "create": "entity_create"
   },
   "electronic_bill": {
+    "view": "electronic_bill_view",
     "create": "electronic_bill_create"
   },
   "item": {
@@ -18,6 +19,7 @@
   },
   "third": {
     "view": "third_view",
-    "create": "third_create"
+    "create": "third_create",
+    "update": "third_update"
   }
 }

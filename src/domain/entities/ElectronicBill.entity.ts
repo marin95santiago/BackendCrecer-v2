@@ -85,6 +85,7 @@ export interface ElectronicBill {
   entityId?: string
   userId?: string
   number?: number
+  preview?: string
   date: string
   orderReference: string
   third: Third

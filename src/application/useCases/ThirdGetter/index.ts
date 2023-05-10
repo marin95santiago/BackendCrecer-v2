@@ -8,8 +8,8 @@ export class ThirdGetterUseCase {
     this._thirdRepository = thirdRepository
   }
 
-  async run (entityId: string): Promise<Third[]> {
-    const thirds: Third[] = await this._thirdRepository.getAll(entityId)
-    return thirds
+  async run (entityId: string, limit?: number, lastEvaluatedKey?: any): Promise<{ lastEvaluatedKey: any, thirds: Third[] }> {
+    const response: { lastEvaluatedKey: any, thirds: Third[] } = await this._thirdRepository.getAll(entityId, limit, lastEvaluatedKey)
+    return response
   }
 }
