@@ -167,7 +167,7 @@ export class DynamoDBElectronicBillRepository implements ElectronicBillRepositor
           return {
             code: itemBill.M.code.S ?? '',
             description: itemBill.M.description.S ?? '',
-            price: Number(itemBill.M.price.N) ?? 0,
+            price: Number(itemBill.M.price.N ?? itemBill.M.price.S) ?? 0,
             quantity: Number(itemBill.M.quantity.S ? itemBill.M.quantity.S : itemBill.M.quantity.N) ?? 0,
             total: Number(itemBill.M.total.N) ?? 0,
             taxes: itemBill.M.taxes.L.map((tax: any) => {
@@ -380,7 +380,7 @@ export class DynamoDBElectronicBillRepository implements ElectronicBillRepositor
           return {
             code: itemBill.M.code.S ?? '',
             description: itemBill.M.description.S ?? '',
-            price: itemBill.M.price.N ?? 0,
+            price: Number(itemBill.M.price.N ?? itemBill.M.price.S) ?? 0,
             unitMeasure: itemBill.M.unitMeasure.M !== undefined
               ?
               {
