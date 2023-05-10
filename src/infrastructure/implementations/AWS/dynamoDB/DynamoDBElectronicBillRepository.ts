@@ -307,7 +307,7 @@ export class DynamoDBElectronicBillRepository implements ElectronicBillRepositor
         entityId: item.entityId.S ?? undefined,
         userId: item.userId.S ?? undefined,
         number: item.number.N ?? undefined,
-        preview: item.preview?.S ?? undefined,
+        preview: item.preview !== undefined ? item.preview.S : undefined,
         date: item.date.S ?? '',
         orderReference: item.orderReference.S ?? '',
         third: {
@@ -360,11 +360,14 @@ export class DynamoDBElectronicBillRepository implements ElectronicBillRepositor
           code: item.wayToPay.M.code.S ?? '',
           description: item.wayToPay.M.description.S ?? ''
         },
-        paymentMethod: {
-          code: item.paymentMethod?.M.code.S ?? '',
-          description: item.paymentMethod?.M.description.S ?? ''
-        },
-        paymentDueDate: item.paymentDueDate?.S ?? '',
+        paymentMethod: item.paymentMethod !== undefined ?
+        (
+          {
+            code: item.paymentMethod.M.code.S ?? '',
+            description: item.paymentMethod.M.description.S ?? ''
+          }
+        ) : { code: '', description: '' },
+        paymentDueDate: item.paymentDueDate !== undefined ? item.paymentDueDate.S : '',
         municipality: item.third.M.city?.M !== undefined
           ?
             {
