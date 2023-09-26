@@ -27,6 +27,9 @@ import { getAllThirds } from './third/getAllThirds.controller'
 import { updateThird } from './third/updateThird.controller'
 import { getThirdByDocument } from './third/getThirdByDocument.controller'
 
+// Concepts
+import { createConcept } from './concept/createConcept.controller'
+
 export {
   createUser as createUserController,
   getAllUsers as getAllUsersController,
@@ -45,5 +48,6 @@ export {
   createThird as createThirdController,
   getAllThirds as getAllThirdsController,
   updateThird as updateThirdController,
-  getThirdByDocument as getThirdByDocumentController
+  getThirdByDocument as getThirdByDocumentController,
+  createConcept as createConceptController
 }

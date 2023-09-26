@@ -25,21 +25,28 @@ export class DynamoDBItemRepository implements ItemRepository {
   }
 
   async save(item: Item): Promise<Item> {
-    const params = {
-      TableName: `${this._project}-${this._environment}-${this._table}`,
-      Item: marshall({
-        entityId: item.entityId ?? '',
-        code: item.code ?? '',
-        description: item.description ?? '',
-        price: item.price ?? null,
-        unitMeasure: item.unitMeasure ?? null,
-        itemType: item.itemType ?? null
-      })
+    try {
+      const params = {
+        TableName: `${this._project}-${this._environment}-${this._table}`,
+        Item: marshall({
+          entityId: item.entityId ?? '',
+          code: item.code ?? '',
+          account: item.account ? Number(item.account) : undefined,
+          description: item.description ?? '',
+          price: Number(item.price) ?? null,
+          unitMeasure: item.unitMeasure ?? null,
+          itemType: item.itemType ?? null
+        },{
+          removeUndefinedValues: true
+        })
+      }
+  
+      await this.client.send(new PutItemCommand(params))
+      
+      return item
+    } catch (error) {
+      throw error
     }
-
-    await this.client.send(new PutItemCommand(params))
-    
-    return item
   }
 
   async getAll(entityId: string): Promise<Item[]> {
@@ -60,8 +67,9 @@ export class DynamoDBItemRepository implements ItemRepository {
       return {
         entityId: item.entityId.S ?? '',
         code: item.code.S ?? '',
+        account: item.account?.N ? Number(item.account.N) : undefined,
         description: item.description.S ?? '',
-        price: Number(item.price.S) ?? undefined,
+        price: Number(item.price.S ?? item.price.N) ?? undefined, // some products are string (fix this into db)
         unitMeasure: item.unitMeasure.M !== undefined
           ?
             {
@@ -100,8 +108,9 @@ export class DynamoDBItemRepository implements ItemRepository {
     const item = {
       entityId: itemDB.entityId.S ?? '',
       code: itemDB.code.S ?? '',
+      account: itemDB.account?.N ? Number(itemDB.account.N) : undefined, 
       description: itemDB.code.S ?? '',
-      price: Number(itemDB.price.S) ?? undefined,
+      price: Number(itemDB.price.S ?? itemDB.price.N) ?? undefined, // some products are string (fix this into db)
       unitMeasure: itemDB.unitMeasure.M !== undefined
         ?
           {
