@@ -13,7 +13,7 @@ export class Server {
     this._port = port
     this._app = express()
     this._corsOptions = {
-      origin: 'http://localhost:3000'
+      origin: process.env.FRONT_URL ?? 'http://localhost:3000'
     }
     this._app.use(express.json())
     this._app.use(express.urlencoded({ extended: false }))
@@ -25,7 +25,7 @@ export class Server {
     return await new Promise(resolve => {
       this._httpServer = this._app.listen(this._port, () => {
         console.log(
-          `Backend App is running at http://localhost:${this._port}`
+          `Backend App is running at http://localhost:${this._port} and receive ${this._corsOptions.origin}`
         )
         console.log('  Press CTRL-C to stop\n')
         resolve()
