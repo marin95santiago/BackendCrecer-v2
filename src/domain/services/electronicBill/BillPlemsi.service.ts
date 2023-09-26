@@ -20,7 +20,7 @@ export class BillPlemsiService {
       return response
     } catch (error) {
       if (isAxiosError(error)) {
-        throw JSON.stringify(error.response?.data?.data)
+        throw JSON.stringify(error.response?.data)
       } else {
         throw 'Error en el facturador de Plemsi'
       }

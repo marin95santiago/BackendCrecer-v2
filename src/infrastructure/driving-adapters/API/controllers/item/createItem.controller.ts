@@ -8,6 +8,7 @@ import { PermissionNotAvailableException } from '../../../../../domain/exception
 export const createItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const {
     code,
+    account,
     description,
     unitMeasure,
     price,
@@ -29,6 +30,7 @@ export const createItem = async (req: Request, res: Response, next: NextFunction
     const itemCreated = await itemCreatorUseCase.run({
       entityId: session.data.user.entityId,
       code,
+      account: account ? Number(account) : undefined,
       description,
       unitMeasure:{
         code: Number(unitMeasure.code),

@@ -22,7 +22,6 @@ export class ElectronicBillCreatorUseCase {
   async run (bill: ElectronicBill): Promise<{ data: ElectronicBill, entityInformation: { apikey: string, number: number }}> {
     try {
       const entity = await this._getEntityByIdService.run(bill.entityId || '')
-
       if (entity) {
         const number = entity.lastElectronicBillNumber ? Number(entity.lastElectronicBillNumber + 1) : 0
         bill.number = number

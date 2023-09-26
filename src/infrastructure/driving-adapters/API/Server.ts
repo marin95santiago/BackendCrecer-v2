@@ -1,17 +1,23 @@
 import express from 'express'
+import cors from 'cors'
 import * as http from 'http'
 import routes from './routes'
 
 export class Server {
   private readonly _port: string
   private readonly _app: express.Express
+  private readonly _corsOptions: cors.CorsOptions
   private _httpServer?: http.Server
 
   constructor (port: string) {
     this._port = port
     this._app = express()
+    this._corsOptions = {
+      origin: 'http://localhost:3000'
+    }
     this._app.use(express.json())
     this._app.use(express.urlencoded({ extended: false }))
+    this._app.use(cors(this._corsOptions))
     this._app.use(routes)
   }
 
