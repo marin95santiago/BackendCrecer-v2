@@ -15,7 +15,8 @@
   },
   "item": {
     "view": "item_view",
-    "create": "item_create"
+    "create": "item_create",
+    "update": "item_update"
   },
   "third": {
     "view": "third_view",
