@@ -20,6 +20,8 @@ import { getElectronicBillByNumber } from './bill/getElectronicBillByNumber.cont
 // Items
 import { createItem } from './item/createItem.controller'
 import { getAllItems } from './item/getAllItems.controller'
+import { getItemByCode } from './item/getItemByCode.controller'
+import { updateItem } from './item/updateItem.controller'
 
 // Thirds
 import { createThird } from './third/createThird.controller'
@@ -29,6 +31,9 @@ import { getThirdByDocument } from './third/getThirdByDocument.controller'
 
 // Concepts
 import { createConcept } from './concept/createConcept.controller'
+import { updateConcept } from './concept/updateConcept.controller'
+import { getAllConcepts } from './concept/getAllConcepts.controller'
+import { getConceptByAccount } from './concept/getConceptByAccount.controller'
 
 export {
   createUser as createUserController,
@@ -44,10 +49,15 @@ export {
   getAllElectronicBills as getAllElectronicBillsController,
   getElectronicBillByNumber as getElectronicBillByNumberController,
   createItem as createItemController,
+  getItemByCode as getItemByCodeController,
+  updateItem as updateItemController,
   getAllItems as getAllItemsController,
   createThird as createThirdController,
   getAllThirds as getAllThirdsController,
   updateThird as updateThirdController,
   getThirdByDocument as getThirdByDocumentController,
-  createConcept as createConceptController
+  createConcept as createConceptController,
+  updateConcept as updateConceptController,
+  getAllConcepts as getAllConceptsController,
+  getConceptByAccount as getConceptByAccountController
 }

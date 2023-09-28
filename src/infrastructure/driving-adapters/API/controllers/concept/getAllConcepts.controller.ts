@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
-import { DynamoDBItemRepository } from '../../../../implementations/AWS/dynamoDB/DynamoDBItemRepository'
-import { ItemGetterUseCase } from '../../../../../application/useCases/ItemGetter'
+import { DynamoDBConceptRepository } from '../../../../implementations/AWS/dynamoDB/DynamoDBConceptRepository'
+import { ConceptGetterUseCase } from '../../../../../application/useCases/ConceptGetter'
 import { validatePermission } from '../../utils'
 import permissionsList from '../../permission.json'
 import { PermissionNotAvailableException } from '../../../../../domain/exceptions/common/PermissionNotAvailable.exception'
 
-export const getAllItems = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getAllConcepts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { sessionUser } = req.params
   const { limit, lastEvaluatedKey } = req.query
 
@@ -14,19 +14,20 @@ export const getAllItems = async (req: Request, res: Response, next: NextFunctio
     lastEvaluatedKey: lastEvaluatedKey !== undefined ? JSON.parse(lastEvaluatedKey.toString()) : undefined
   }
 
-  const dynamoDBItemRepository = new DynamoDBItemRepository()
-  const itemGetterUseCase = new ItemGetterUseCase(dynamoDBItemRepository)
+  const dynamoDBConceptRepository = new DynamoDBConceptRepository()
+  const conceptGetterUseCase = new ConceptGetterUseCase(dynamoDBConceptRepository)
 
   try {
     const session = JSON.parse(sessionUser)
     const doesSuperAdminHavePermission = true
-    const havePermission = validatePermission(permissionsList.item.view, session.data.user.permissions, doesSuperAdminHavePermission)
+    const havePermission = validatePermission(permissionsList.concept.view, session.data.user.permissions, doesSuperAdminHavePermission)
+
     if (!havePermission) throw new PermissionNotAvailableException()
 
-    const items = await itemGetterUseCase.run(session.data.user.entityId, params.limit, params.lastEvaluatedKey)
-    res.json(items)
+    const response = await conceptGetterUseCase.run(session.data.user.entityId, params.limit, params.lastEvaluatedKey)
+    res.json(response)
     return
-  } catch (e) {
+  } catch (e) { 
     return next(e)
   }
 }

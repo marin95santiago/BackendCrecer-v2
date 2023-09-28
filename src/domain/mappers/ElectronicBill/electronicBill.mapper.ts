@@ -88,3 +88,57 @@ export function taxesPlemsiMapper(taxes: Tax[]): TaxPlemsi[] {
 
   return response
 }
+
+/*
+export function electronicBillMapper(bill: any) : ElectronicBill {
+  return {
+    entityId: bill.entityId,
+    userId: bill.userId,
+    number: Number(bill.number),
+    preview: bill.preview,
+    date: bill.date,
+    orderReference: bill.orderReference,
+    third: {
+      entityId: bill.third.entityId,
+      document: bill.third.document,
+      dv: bill.third.dv,
+      documentType: {
+        code: bill.third.documentType.code,
+        description: bill.documentType.description
+      },
+      organizationType: {
+        code: bill.third.organizationType.code,
+        description: bill.third.organizationType.description
+      },
+      liabilityType: {
+        code: bill.third.liabilityType.code,
+        description: bill.third.liabilityType.description
+      },
+      regimeType: {
+        code: bill.third.regimeType.code,
+        description: bill.third.regimeType.description
+      },
+      name: bill.third.name ?? undefined,
+      lastname: bill.third.lastname ?? undefined,
+      businessName: bill.third.businessName ?? undefined,
+      phone: bill.third.phone,
+      address: bill.third.address,
+      city: {
+        code: bill.third.city.code,
+        description: bill.third.city.description
+      },
+      email: bill.third.email
+    },
+    wayToPay: { code: Number(bill.wayToPay.code), description: bill.wayToPay.description},
+    paymentMethod: { code: Number(bill.paymentMethod.code), description: bill.paymentMethod.description},
+    paymentDueDate: bill.paymentDueDate,
+    municipality: { code: string, description: string }
+    note: string
+    items: Item[]
+    taxes: Tax[]
+    total: number
+    totalTaxes: number
+    totalToPay: number
+  }
+}
+*/
