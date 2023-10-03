@@ -1,6 +1,6 @@
 import path from 'path'
 import * as dotenv from 'dotenv'
-import { DynamoDBClient, PutItemCommand, ScanCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, PutItemCommand, GetItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { ConceptRepository } from '../../../../domain/repositories/Concept.repository'
 import { Concept } from '../../../../domain/entities/Concept.entity'
@@ -44,8 +44,30 @@ export class DynamoDBConceptRepository implements ConceptRepository {
     }
   }
 
-  async getAll(entityId: string): Promise<Concept[]> {
+  async update(concept: Concept): Promise<Concept> {
     const params = {
+      TableName: `${this._project}-${this._environment}-${this._table}`,
+      Item: marshall({
+        entityId: concept.entityId ?? '',
+        account: concept.account ? Number(concept.account) : 0,
+        description: concept.description ?? '',
+        type: concept.type ?? ''
+      })
+    }
+    await this.client.send(new PutItemCommand(params))
+
+    return concept
+  }
+
+  async getAll(entityId: string, limit?: number, lastEvaluatedKey?: any): Promise<{lastEvaluatedKey: any, concepts: Concept[]}> {
+    const params : {
+      TableName: string
+      IndexName: string
+      KeyConditionExpression: string
+      ExpressionAttributeValues: any
+      ExclusiveStartKey?: any
+      Limit?: number
+    } = {
       TableName: `${this._project}-${this._environment}-${this._table}`,
       IndexName: 'entityId-account-index',
       KeyConditionExpression: 'entityId = :entityId',
@@ -55,7 +77,15 @@ export class DynamoDBConceptRepository implements ConceptRepository {
         }
       }
     }
-    const response = await this.client.send(new ScanCommand(params))
+
+    if (limit !== undefined) {
+      params.Limit = limit
+    }
+
+    if (lastEvaluatedKey !== undefined) {
+      params.ExclusiveStartKey = lastEvaluatedKey
+    }
+    const response = await this.client.send(new QueryCommand(params))
 
     const items = (response.Items !== undefined) ? response.Items : []
 
@@ -74,7 +104,10 @@ export class DynamoDBConceptRepository implements ConceptRepository {
       }
     })
 
-    return concepts
+    return {
+      lastEvaluatedKey: response.LastEvaluatedKey,
+      concepts: concepts
+    }
   }
 
   async getByAccount(account: number, entityId: string): Promise<Concept | null> {
@@ -95,7 +128,7 @@ export class DynamoDBConceptRepository implements ConceptRepository {
     const concept = {
       entityId: item.entityId.S ?? '',
       account: Number(item.account.N) ?? 0,
-      description: item.code.S ?? '',
+      description: item.description.S ?? '',
       type: item.type?.M !== undefined
         ?
         {
