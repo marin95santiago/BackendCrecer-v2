@@ -1,21 +1,6 @@
 const ExcelJS = require('exceljs');
 const dataS = require('./data.json')
 
-
-/*
-const data = [
-  {
-    numero_documento: '',
-    cuenta_contable: '',
-    debito_o_credito: '',
-    valor_de_la_secuencia: '',
-    año: '',
-    mes: '',
-    dia: '',
-    descripcion_secuencia: ''
-  }
-]
-*/
 const contables = [
   {
     idItem: '01',

@@ -35,6 +35,12 @@ import { updateConcept } from './concept/updateConcept.controller'
 import { getAllConcepts } from './concept/getAllConcepts.controller'
 import { getConceptByAccount } from './concept/getConceptByAccount.controller'
 
+// Accounts
+import { createAccount } from './account/createAccount.controller'
+import { updateAccount } from './account/updateAccount.controller'
+import { getAllAccounts } from './account/getAllAccounts.controller'
+import { getAccountByAccount } from './account/getAccountByAccount.controller'
+
 export {
   createUser as createUserController,
   getAllUsers as getAllUsersController,
@@ -59,5 +65,9 @@ export {
   createConcept as createConceptController,
   updateConcept as updateConceptController,
   getAllConcepts as getAllConceptsController,
-  getConceptByAccount as getConceptByAccountController
+  getConceptByAccount as getConceptByAccountController,
+  createAccount as createAccountController,
+  updateAccount as updateAccountController,
+  getAllAccounts as getAllAccountsController,
+  getAccountByAccount as getAccountByAccountController
 }

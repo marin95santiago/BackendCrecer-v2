@@ -6,6 +6,7 @@ import entityRoutes from './entity.routes'
 import itemRoutes from './item.routes'
 import thirdRoutes from './third.routes'
 import conceptRoutes from './concept.routes'
+import accountRoutes from './account.routes'
 import { UserAlreadyExistException } from '../../../../domain/exceptions/user/UserAlreadyExist.exception'
 import { UserNotFoundException } from '../../../../domain/exceptions/user/UserNotFound.exception'
 import { LoginWrongPasswordException } from '../../../../domain/exceptions/user/LoginWrongPassword.exception'
@@ -24,6 +25,7 @@ route.use('/api/v2/entity', entityRoutes)
 route.use('/api/v2/item', itemRoutes)
 route.use('/api/v2/third', thirdRoutes)
 route.use('/api/v2/concept', conceptRoutes)
+route.use('/api/v2/account', accountRoutes)
 
 route.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof UserAlreadyExistException) {
