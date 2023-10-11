@@ -11,6 +11,7 @@ export const createEntity = async (req: Request, res: Response, next: NextFuncti
     name,
     entityTypeCode,
     document,
+    dv,
     signatories,
     address,
     email,
@@ -19,7 +20,8 @@ export const createEntity = async (req: Request, res: Response, next: NextFuncti
     state,
     resolution,
     resolutionText,
-    lastElectronicBillNumber
+    lastElectronicBillNumber,
+    receiptNumbers
   } = req.body
 
   const { sessionUser } = req.params
@@ -39,6 +41,7 @@ export const createEntity = async (req: Request, res: Response, next: NextFuncti
       name,
       entityTypeCode,
       document,
+      dv,
       signatories,
       address,
       email,
@@ -47,7 +50,13 @@ export const createEntity = async (req: Request, res: Response, next: NextFuncti
       state: state || 'ACTIVE',
       resolution,
       resolutionText,
-      lastElectronicBillNumber
+      lastElectronicBillNumber,
+      receiptNumbers: receiptNumbers.map((rn: any) => {
+        return {
+          lastReceiptNumber: Number(rn.lastReceiptNumber),
+          prefix: rn.prefix
+        }
+      })
     })
 
     res.json(entityCreated)
