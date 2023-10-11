@@ -32,7 +32,8 @@ export class DynamoDBAccountRepository implements AccountRepository {
           entityId: account.entityId ?? '',
           account: account.account ? Number(account.account) : 0,
           description: account.description ?? '',
-          balance: account.balance ? Number(account.balance) : 0
+          balance: account.balance ? Number(account.balance) : 0,
+          document: account.document ? Number(account.document) : 0
         })
       }
 
@@ -51,7 +52,8 @@ export class DynamoDBAccountRepository implements AccountRepository {
         entityId: account.entityId ?? '',
         account: account.account ? Number(account.account) : 0,
         description: account.description ?? '',
-        balance: account.balance ? Number(account.balance) : 0
+        balance: account.balance ? Number(account.balance) : 0,
+        document: account.document ? Number(account.document) : 0
       })
     }
     await this.client.send(new PutItemCommand(params))
@@ -94,7 +96,8 @@ export class DynamoDBAccountRepository implements AccountRepository {
         entityId: item.entityId.S ?? '',
         account: Number(item.account.N) ?? 0,
         description: item.description.S ?? '',
-        balance: Number(item.balance.N) ?? 0
+        balance: Number(item.balance.N) ?? 0,
+        document: item.document ? Number(item.document.N) : 0
       }
     })
 
@@ -123,7 +126,8 @@ export class DynamoDBAccountRepository implements AccountRepository {
       entityId: item.entityId.S ?? '',
       account: Number(item.account.N) ?? 0,
       description: item.description.S ?? '',
-      balance: Number(item.balance.N) ?? 0
+      balance: Number(item.balance.N) ?? 0,
+      document: item.document ? Number(item.document.N) : 0
     }
 
     return accountDb

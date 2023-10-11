@@ -23,15 +23,17 @@ export class DynamoDBEntityRepository implements EntityRepository {
         name: entity.name ?? '',
         entityTypeCode: entity.entityTypeCode ?? '',
         document: entity.document ?? '',
-        signatories: entity.signatories ?? null,
-        address: entity.address ?? null,
+        dv: entity.dv ? Number(entity.dv) : 0,
+        signatories: entity.signatories ?? undefined,
+        address: entity.address ?? undefined,
         email: entity.email ?? '',
-        phone: entity.phone ?? null,
-        apiKeyPlemsi: entity.apiKeyPlemsi ?? null,
+        phone: entity.phone ?? undefined,
+        apiKeyPlemsi: entity.apiKeyPlemsi ?? undefined,
         state: entity.state ?? '',
-        resolution: entity.resolution ?? null,
-        resolutionText: entity.resolutionText ?? null,
-        lastElectronicBillNumber: entity.lastElectronicBillNumber ?? null
+        resolution: entity.resolution ?? undefined,
+        resolutionText: entity.resolutionText ?? undefined,
+        lastElectronicBillNumber: entity.lastElectronicBillNumber ? Number(entity.lastElectronicBillNumber) : undefined,
+        receiptNumbers: entity.receiptNumbers ?? undefined
       })
     }
     await this.client.send(new PutItemCommand(params))
@@ -89,6 +91,7 @@ export class DynamoDBEntityRepository implements EntityRepository {
       name: item.name.S ?? '',
       entityTypeCode: item.entityTypeCode.S ?? '',
       document: item.document.S ?? '',
+      dv: item.dv ? Number(item.dv.N) : 0,
       address: item.address?.M !== undefined
         ?
           {
@@ -133,7 +136,18 @@ export class DynamoDBEntityRepository implements EntityRepository {
         : undefined,
       resolution: item.resolution.S ?? undefined,
       resolutionText: item.resolutionText.S ?? undefined,
-      lastElectronicBillNumber: Number(item.lastElectronicBillNumber.N) ?? undefined
+      lastElectronicBillNumber: item.lastElectronicBillNumber.N ? Number(item.lastElectronicBillNumber.N) : undefined,
+      receiptNumbers: item.receiptNumbers.L !== undefined
+        ?
+          (
+            item.receiptNumbers.L.map(rn => {
+              return {
+                prefix: rn.M?.prefix.S ?? '',
+                lastReceiptNumber: Number(rn.M?.lastReceiptNumber.N) ?? 0
+              }
+            })
+          )
+        : undefined
     }
 
     return entity
@@ -161,6 +175,7 @@ export class DynamoDBEntityRepository implements EntityRepository {
       name: item.name.S ?? '',
       entityTypeCode: item.entityTypeCode.S ?? '',
       document: item.document.S ?? '',
+      dv: item.dv ? Number(item.dv.N) : 0,
       address: item.address?.M !== undefined
         ?
           {
@@ -205,7 +220,18 @@ export class DynamoDBEntityRepository implements EntityRepository {
         : undefined,
       resolution: item.resolution.S ?? undefined,
       resolutionText: item.resolutionText.S ?? undefined,
-      lastElectronicBillNumber: Number(item.lastElectronicBillNumber.N) ?? undefined
+      lastElectronicBillNumber: item.lastElectronicBillNumber.N ? Number(item.lastElectronicBillNumber.N) : undefined,
+      receiptNumbers: item.receiptNumbers.L !== undefined
+        ?
+          (
+            item.receiptNumbers.L.map(rn => {
+              return {
+                prefix: rn.M?.prefix.S ?? '',
+                lastReceiptNumber: Number(rn.M?.lastReceiptNumber.N) ?? 0
+              }
+            })
+          )
+        : undefined
     }
 
     return entity
@@ -219,15 +245,17 @@ export class DynamoDBEntityRepository implements EntityRepository {
         name: entity.name ?? '',
         entityTypeCode: entity.entityTypeCode ?? '',
         document: entity.document ?? '',
-        signatories: entity.signatories ?? null,
-        address: entity.address ?? null,
+        dv: entity.dv ? Number(entity.dv) : 0,
+        signatories: entity.signatories ?? undefined,
+        address: entity.address ?? undefined,
         email: entity.email ?? '',
-        phone: entity.phone ?? null,
-        apiKeyPlemsi: entity.apiKeyPlemsi ?? null,
+        phone: entity.phone ?? undefined,
+        apiKeyPlemsi: entity.apiKeyPlemsi ?? undefined,
         state: entity.state ?? '',
-        resolution: entity.resolution ?? null,
-        resolutionText: entity.resolutionText ?? null,
-        lastElectronicBillNumber: entity.lastElectronicBillNumber ?? null
+        resolution: entity.resolution ?? undefined,
+        resolutionText: entity.resolutionText ?? undefined,
+        lastElectronicBillNumber: entity.lastElectronicBillNumber ? Number(entity.lastElectronicBillNumber) : undefined,
+        receiptNumbers: entity.receiptNumbers ?? undefined
       })
     }
     await this.client.send(new PutItemCommand(params))
