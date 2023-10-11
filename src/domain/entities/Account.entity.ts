@@ -3,4 +3,5 @@ export interface Account {
   account: number
   description: string
   balance: number
+  document: number
 }

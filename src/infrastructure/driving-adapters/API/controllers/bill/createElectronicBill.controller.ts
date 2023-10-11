@@ -6,8 +6,6 @@ import { validatePermission } from '../../utils'
 import permissionsList from '../../permission.json'
 import { PermissionNotAvailableException } from '../../../../../domain/exceptions/common/PermissionNotAvailable.exception'
 
-const prefixPlemsi = process.env.PREFIX_PLEMSI ?? 'SETT'
-
 export const createElectronicBill = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const {
     date,

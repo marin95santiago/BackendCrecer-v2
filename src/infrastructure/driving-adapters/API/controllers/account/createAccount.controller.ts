@@ -9,7 +9,8 @@ export const createAccount = async (req: Request, res: Response, next: NextFunct
   const {
     account,
     description,
-    balance
+    balance,
+    document
   } = req.body
 
   const { sessionUser } = req.params
@@ -28,7 +29,8 @@ export const createAccount = async (req: Request, res: Response, next: NextFunct
       entityId: session.data.user.entityId,
       account: account ? Number(account) : 0,
       description,
-      balance: balance ? Number(balance) : 0
+      balance: balance ? Number(balance) : 0,
+      document: document ? Number(document): 0
     })
 
     res.json(accountCreated)

@@ -16,6 +16,7 @@ export class AccountCreatorUseCase {
   async run (body: Account): Promise<Account> {
     if (body.account === undefined || body.account === 0) throw new MissingPropertyException('account')
     if (body.description === undefined || body.description === '') throw new MissingPropertyException('description')
+    if (body.document === undefined || body.document === 0) throw new MissingPropertyException('document')
 
     const existItem: boolean = await this._existAccountByAccount.run(Number(body.account), body.entityId)
     if (existItem) throw new AlreadyExistException('Account')
