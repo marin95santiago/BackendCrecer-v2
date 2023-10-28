@@ -126,11 +126,12 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
               item.accounts.L.map((account: any) => {
                 return {
                   account: Number(account.M.account.N) ?? 0,
-                  value: Number(account.M.value.N) ?? 0
+                  value: Number(account.M.value.N) ?? 0,
+                  costCenterCode: account.M.costCenterCode.S ?? ''
                 }
               })
             ) 
-          : ([{ account: 0, value: 0 }]),
+          : ([{ account: 0, value: 0, costCenterCode: '' }]),
         concepts: item.concepts.L !== undefined
         ?
           (
@@ -138,11 +139,12 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
               return {
                 account: Number(concept.M.account.N) ?? 0,
                 value: Number(concept.M.value.N) ?? 0,
-                description: concept.M.description.S ?? ''
+                description: concept.M.description.S ?? '',
+                costCenterCode: concept.M.costCenterCode.S ?? ''
               }
             })
           ) 
-        : ([{ account: 0, value: 0, description: '' }])
+        : ([{ account: 0, value: 0, description: '', costCenterCode: '' }])
       }
     })
 
@@ -189,11 +191,12 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
             item.accounts.L.map((account: any) => {
               return {
                 account: Number(account.M.account.N) ?? 0,
-                value: Number(account.M.value.N) ?? 0
+                value: Number(account.M.value.N) ?? 0,
+                costCenterCode: account.M.costCenterCode.S ?? ''
               }
             })
           ) 
-        : ([{ account: 0, value: 0 }]),
+        : ([{ account: 0, value: 0, costCenterCode: '' }]),
       concepts: item.concepts.L !== undefined
       ?
         (
@@ -201,11 +204,12 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
             return {
               account: Number(concept.M.account.N) ?? 0,
               value: Number(concept.M.value.N) ?? 0,
-              description: concept.M.description.S ?? ''
+              description: concept.M.description.S ?? '',
+              costCenterCode: concept.M.costCenterCode.S ?? ''
             }
           })
         ) 
-      : ([{ account: 0, value: 0, description: '' }])
+      : ([{ account: 0, value: 0, description: '', costCenterCode: '' }])
     }
 
     return receipt

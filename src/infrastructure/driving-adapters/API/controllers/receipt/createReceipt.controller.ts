@@ -48,14 +48,16 @@ export const createReceipt = async (req: Request, res: Response, next: NextFunct
       accounts: accounts.map((acc: any) => {
         return {
           account: Number(acc.account),
-          value: Number(acc.value)
+          value: Number(acc.value),
+          costCenterCode: acc.costCenterCode
         }
       }),
       concepts: concepts.map((concept: any) => {
         return {
           account: Number(concept.account),
           value: Number(concept.value),
-          description: concept.description
+          description: concept.description,
+          costCenterCode: concept.costCenterCode
         }
       })
     })

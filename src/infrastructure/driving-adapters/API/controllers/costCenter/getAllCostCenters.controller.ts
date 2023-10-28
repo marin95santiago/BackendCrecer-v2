@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
-import { DynamoDBThirdRepository } from '../../../../implementations/AWS/dynamoDB/DynamoDBThirdRepository'
-import { ThirdGetterUseCase } from '../../../../../application/useCases/ThirdGetter'
+import { DynamoDBCostCenterRepository } from '../../../../implementations/AWS/dynamoDB/DynamoDBCostCenterRepository'
+import { CostCenterGetterUseCase } from '../../../../../application/useCases/CostCenterGetter'
 import { validatePermission } from '../../utils'
 import permissionsList from '../../permission.json'
 import { PermissionNotAvailableException } from '../../../../../domain/exceptions/common/PermissionNotAvailable.exception'
 
-export const getAllThirds = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getAllCostCenters = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { sessionUser } = req.params
   const { limit, lastEvaluatedKey } = req.query
 
@@ -14,17 +14,17 @@ export const getAllThirds = async (req: Request, res: Response, next: NextFuncti
     lastEvaluatedKey: lastEvaluatedKey !== undefined ? JSON.parse(lastEvaluatedKey.toString()) : undefined
   }
 
-  const dynamoDBThirdRepository = new DynamoDBThirdRepository()
-  const thirdGetterUseCase = new ThirdGetterUseCase(dynamoDBThirdRepository)
+  const dynamoDBCostCenterRepository = new DynamoDBCostCenterRepository()
+  const costCenterGetterUseCase = new CostCenterGetterUseCase(dynamoDBCostCenterRepository)
 
   try {
     const session = JSON.parse(sessionUser)
     const doesSuperAdminHavePermission = true
-    const havePermission = validatePermission(permissionsList.third.list, session.data.user.permissions, doesSuperAdminHavePermission)
+    const havePermission = validatePermission(permissionsList.cost_center.list, session.data.user.permissions, doesSuperAdminHavePermission)
 
     if (!havePermission) throw new PermissionNotAvailableException()
 
-    const response = await thirdGetterUseCase.run(session.data.user.entityId, params.limit, params.lastEvaluatedKey)
+    const response = await costCenterGetterUseCase.run(session.data.user.entityId, params.limit, params.lastEvaluatedKey)
     res.json(response)
     return
   } catch (e) { 

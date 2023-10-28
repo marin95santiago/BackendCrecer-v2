@@ -20,7 +20,7 @@ export const getAllReceipts = async (req: Request, res: Response, next: NextFunc
   try {
     const session = JSON.parse(sessionUser)
     const doesSuperAdminHavePermission = true
-    const havePermission = validatePermission(permissionsList.receipt.view, session.data.user.permissions, doesSuperAdminHavePermission)
+    const havePermission = validatePermission(permissionsList.receipt.list, session.data.user.permissions, doesSuperAdminHavePermission)
 
     if (!havePermission) throw new PermissionNotAvailableException()
 
