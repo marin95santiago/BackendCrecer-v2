@@ -20,7 +20,7 @@ export const getAllConcepts = async (req: Request, res: Response, next: NextFunc
   try {
     const session = JSON.parse(sessionUser)
     const doesSuperAdminHavePermission = true
-    const havePermission = validatePermission(permissionsList.concept.view, session.data.user.permissions, doesSuperAdminHavePermission)
+    const havePermission = validatePermission(permissionsList.concept.list, session.data.user.permissions, doesSuperAdminHavePermission)
 
     if (!havePermission) throw new PermissionNotAvailableException()
 

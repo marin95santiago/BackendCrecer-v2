@@ -35,6 +35,12 @@ import { updateConcept } from './concept/updateConcept.controller'
 import { getAllConcepts } from './concept/getAllConcepts.controller'
 import { getConceptByAccount } from './concept/getConceptByAccount.controller'
 
+// CostCenter
+import { createCostCenter } from './costCenter/createCostCenter.controller'
+import { updateCostCenter } from './costCenter/updateCostCenter.controller'
+import { getAllCostCenters } from './costCenter/getAllCostCenters.controller'
+import { getCostCenterByCode } from './costCenter/getCostCenterByCode.controller'
+
 // Accounts
 import { createAccount } from './account/createAccount.controller'
 import { updateAccount } from './account/updateAccount.controller'
@@ -75,5 +81,9 @@ export {
   getAllAccounts as getAllAccountsController,
   getAccountByAccount as getAccountByAccountController,
   createReceipt as createReceiptController,
-  getAllReceipts as getAllReceiptsController
+  getAllReceipts as getAllReceiptsController,
+  createCostCenter as createCostCenterController,
+  updateCostCenter as updateCostCenterController,
+  getAllCostCenters as getAllCostCentersController,
+  getCostCenterByCode as getCostCenterByCodeController
 }
