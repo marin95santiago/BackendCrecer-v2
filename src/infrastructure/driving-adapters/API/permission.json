@@ -11,31 +11,43 @@
   },
   "electronic_bill": {
     "view": "electronic_bill_view",
-    "create": "electronic_bill_create"
+    "create": "electronic_bill_create",
+    "list": "electronic_bill_list"
   },
   "item": {
     "view": "item_view",
     "create": "item_create",
-    "update": "item_update"
+    "update": "item_update",
+    "list": "item_list"
   },
   "third": {
     "view": "third_view",
     "create": "third_create",
-    "update": "third_update"
+    "update": "third_update",
+    "list": "third_list"
   },
   "concept":{
     "view": "concept_view",
     "create": "concept_create",
-    "update": "concept_update"
+    "update": "concept_update",
+    "list": "concept_list"
+  },
+  "cost_center":{
+    "view": "cost_center_view",
+    "create": "cost_center_create",
+    "update": "cost_center_update",
+    "list": "cost_center_list"
   },
   "account":{
     "view": "account_view",
     "create": "account_create",
-    "update": "account_update"
+    "update": "account_update",
+    "list": "account_list"
   },
   "receipt":{
     "view": "receipt_view",
     "create": "receipt_create",
-    "update": "receipt_update"
+    "update": "receipt_update",
+    "list": "receipt_list"
   }
 }
