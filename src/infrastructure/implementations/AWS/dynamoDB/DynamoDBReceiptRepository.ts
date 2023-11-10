@@ -127,11 +127,12 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
                 return {
                   account: Number(account.M.account.N) ?? 0,
                   value: Number(account.M.value.N) ?? 0,
+                  description: account.M.description?.S ?? '',
                   costCenterCode: account.M.costCenterCode.S ?? ''
                 }
               })
             ) 
-          : ([{ account: 0, value: 0, costCenterCode: '' }]),
+          : ([{ account: 0, value: 0, description: '', costCenterCode: '' }]),
         concepts: item.concepts.L !== undefined
         ?
           (
@@ -192,11 +193,12 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
               return {
                 account: Number(account.M.account.N) ?? 0,
                 value: Number(account.M.value.N) ?? 0,
+                description: account.M.description?.S ?? '',
                 costCenterCode: account.M.costCenterCode.S ?? ''
               }
             })
           ) 
-        : ([{ account: 0, value: 0, costCenterCode: '' }]),
+        : ([{ account: 0, value: 0, description: '', costCenterCode: '' }]),
       concepts: item.concepts.L !== undefined
       ?
         (

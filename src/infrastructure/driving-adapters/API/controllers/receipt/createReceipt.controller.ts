@@ -49,6 +49,7 @@ export const createReceipt = async (req: Request, res: Response, next: NextFunct
         return {
           account: Number(acc.account),
           value: Number(acc.value),
+          description: acc.description,
           costCenterCode: acc.costCenterCode
         }
       }),

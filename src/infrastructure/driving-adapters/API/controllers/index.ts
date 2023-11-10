@@ -50,6 +50,7 @@ import { getAccountByAccount } from './account/getAccountByAccount.controller'
 // Receipts
 import { createReceipt } from './receipt/createReceipt.controller'
 import { getAllReceipts } from './receipt/getAllReceipts.controller'
+import { getReceiptByCode } from './receipt/getReceiptByCode.controller'
 
 export {
   createUser as createUserController,
@@ -85,5 +86,6 @@ export {
   createCostCenter as createCostCenterController,
   updateCostCenter as updateCostCenterController,
   getAllCostCenters as getAllCostCentersController,
-  getCostCenterByCode as getCostCenterByCodeController
+  getCostCenterByCode as getCostCenterByCodeController,
+  getReceiptByCode as getReceiptByCodeController
 }
