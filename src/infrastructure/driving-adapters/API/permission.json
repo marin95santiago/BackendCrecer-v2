@@ -49,5 +49,8 @@
     "create": "receipt_create",
     "update": "receipt_update",
     "list": "receipt_list"
+  },
+  "report": {
+    "daily_report_receipt": "daily_report_receipt"
   }
 }
