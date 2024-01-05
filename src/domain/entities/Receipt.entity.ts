@@ -27,4 +27,5 @@ export interface Receipt {
   total: number
   accounts: AccountReceipt[]
   concepts: ConceptReceipt[]
+  status?: string
 }

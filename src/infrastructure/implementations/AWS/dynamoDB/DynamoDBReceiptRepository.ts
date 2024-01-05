@@ -39,7 +39,8 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
           totalValueLetter: receipt.totalValueLetter ?? '',
           total: receipt.total ? Number(receipt.total) : 0,
           accounts: receipt.accounts ?? undefined,
-          concepts: receipt.concepts ?? undefined
+          concepts: receipt.concepts ?? undefined,
+          status: receipt.status ?? 'VALID'
         })
       }
 
@@ -65,7 +66,8 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
         totalValueLetter: receipt.totalValueLetter ?? '',
         total: receipt.total ? Number(receipt.total) : 0,
         accounts: receipt.accounts ?? undefined,
-        concepts: receipt.concepts ?? undefined
+        concepts: receipt.concepts ?? undefined,
+        status: receipt.status ?? 'VALID'
       })
     }
     await this.client.send(new PutItemCommand(params))
@@ -79,17 +81,19 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
       IndexName: string
       KeyConditionExpression: string
       ExpressionAttributeValues: any
+      ScanIndexForward: boolean
       ExclusiveStartKey?: any
       Limit?: number
     } = {
       TableName: `${this._project}-${this._environment}-${this._table}`,
-      IndexName: 'entityId-code-index',
+      IndexName: 'entityId-date-index',
       KeyConditionExpression: 'entityId = :entityId',
       ExpressionAttributeValues: {
         ':entityId': {
           S: entityId
         }
-      }
+      },
+      ScanIndexForward: false,
     }
 
     if (limit !== undefined) {
@@ -120,6 +124,7 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
         thirdDocument: item.thirdDocument.S ?? '',
         totalValueLetter: item.totalValueLetter.S ?? '',
         total: Number(item.total.N) ?? 0,
+        status: item.status.S ?? '',
         accounts: item.accounts.L !== undefined
           ?
           (
@@ -155,7 +160,7 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
     }
   }
 
-  async getByCode(code: string, entityId: string): Promise<Receipt | null> {
+  async getByCode(entityId: string, code: string): Promise<Receipt | null> {
     const params = {
       TableName: `${this._project}-${this._environment}-${this._table}`,
       Key: marshall({
@@ -186,6 +191,7 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
       thirdDocument: item.thirdDocument.S ?? '',
       totalValueLetter: item.totalValueLetter.S ?? '',
       total: Number(item.total.N) ?? 0,
+      status: item.status.S ?? '',
       accounts: item.accounts.L !== undefined
         ?
         (
@@ -226,6 +232,7 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
       ExpressionAttributeNames: any
       ProjectionExpression: string
       ScanIndexForward: boolean
+      FilterExpression: string
       ExclusiveStartKey?: any
       Limit?: number
     } = {
@@ -241,13 +248,18 @@ export class DynamoDBReceiptRepository implements ReceiptRepository {
         },
         ':endDate': {
           S: endDate
+        },
+        ':status': {
+          S: 'VALID'
         }
       },
       ExpressionAttributeNames: {
         '#date': 'date',
-        '#type': 'type'
+        '#type': 'type',
+        '#status': 'status'
       },
       ProjectionExpression: 'code, accounts, concepts, #type, #date',
+      FilterExpression: '#status = :status',
       ScanIndexForward: false,
     }
 
