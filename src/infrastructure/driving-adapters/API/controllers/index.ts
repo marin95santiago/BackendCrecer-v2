@@ -49,9 +49,11 @@ import { getAccountByAccount } from './account/getAccountByAccount.controller'
 
 // Receipts
 import { createReceipt } from './receipt/createReceipt.controller'
+import { updateReceipt } from './receipt/updateReceipt.controller'
 import { getAllReceipts } from './receipt/getAllReceipts.controller'
 import { getReceiptByCode } from './receipt/getReceiptByCode.controller'
 import { dailyReportReceipt } from './receipt/dailyReportReceipt.controller'
+import { cancelReceipt } from './receipt/cancelReceipt.controller'
 
 export {
   createUser as createUserController,
@@ -83,11 +85,13 @@ export {
   getAllAccounts as getAllAccountsController,
   getAccountByAccount as getAccountByAccountController,
   createReceipt as createReceiptController,
+  updateReceipt as updateReceiptController,
   getAllReceipts as getAllReceiptsController,
   createCostCenter as createCostCenterController,
   updateCostCenter as updateCostCenterController,
   getAllCostCenters as getAllCostCentersController,
   getCostCenterByCode as getCostCenterByCodeController,
   getReceiptByCode as getReceiptByCodeController,
-  dailyReportReceipt as dailyReportReceiptController
+  dailyReportReceipt as dailyReportReceiptController,
+  cancelReceipt as cancelReceiptController
 }

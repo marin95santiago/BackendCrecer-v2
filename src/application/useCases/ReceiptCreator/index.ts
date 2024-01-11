@@ -5,6 +5,7 @@ import { Receipt } from '../../../domain/entities/Receipt.entity'
 import { GetEntityByIdService } from '../../../domain/services/entity/GetEntityById.service'
 import { GetAccountByAccountService } from '../../../domain/services/account/GetAccountByAccount.service'
 import { UnhandledException } from '../../../domain/exceptions/common/Unhandled.exception'
+import { MissingPropertyException } from '../../../domain/exceptions/common/MissingProperty.exception'
 
 export class ReceiptCreatorUseCase {
   private readonly _receiptRepository: ReceiptRepository
@@ -23,6 +24,14 @@ export class ReceiptCreatorUseCase {
 
   async run (receipt: Receipt): Promise<Receipt> {
     try {
+      if (receipt.date === undefined || receipt.date === '') throw new MissingPropertyException('date')
+      if (receipt.description === undefined || receipt.description === '') throw new MissingPropertyException('description')
+      if (receipt.thirdDocument === undefined || receipt.thirdDocument === '') throw new MissingPropertyException('thirdDocument')
+      if (receipt.totalValueLetter === undefined || receipt.totalValueLetter === '') throw new MissingPropertyException('totalValueLetter')
+      if (receipt.total === undefined) throw new MissingPropertyException('total')
+      if (receipt.accounts === undefined || receipt.accounts.length === 0) throw new MissingPropertyException('accounts')
+      if (receipt.concepts === undefined || receipt.concepts.length === 0) throw new MissingPropertyException('concepts')
+    
       const entity = await this._getEntityByIdService.run(receipt.entityId || '')
       if (entity) {
         // Get accounst for update automatic serial

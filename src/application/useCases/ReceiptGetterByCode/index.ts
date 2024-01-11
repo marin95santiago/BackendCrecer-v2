@@ -14,7 +14,7 @@ export class ReceiptGetterByCodeUseCase {
    * @returns {Receipt | null}
    */
   async run (code: string, entityId: string): Promise<Receipt | null> {
-    const receipt = await this._receiptRepository.getByCode(code, entityId)
+    const receipt = await this._receiptRepository.getByCode(entityId, code)
     return receipt
   }
 }
