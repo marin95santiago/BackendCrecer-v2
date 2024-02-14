@@ -16,11 +16,17 @@ export interface Address {
   }
 }
 
+export interface ReceiptNumbers {
+  prefix: string
+  lastReceiptNumber: number
+}
+
 export interface Entity {
   id: string
   name: string
   entityTypeCode: string
   document: string
+  dv: number
   signatories?: Signatory[]
   address?: Address
   email?: string
@@ -30,4 +36,5 @@ export interface Entity {
   resolution?: string
   resolutionText?: string,
   lastElectronicBillNumber?: number
+  receiptNumbers?: ReceiptNumbers[]
 }

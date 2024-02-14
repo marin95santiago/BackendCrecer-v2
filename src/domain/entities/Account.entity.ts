@@ -1,4 +1,7 @@
 export interface Account {
-  code: string
+  entityId: string
+  account: number
   description: string
+  balance: number
+  document: number
 }

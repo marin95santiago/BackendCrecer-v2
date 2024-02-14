@@ -20,7 +20,7 @@ export const getAllThirds = async (req: Request, res: Response, next: NextFuncti
   try {
     const session = JSON.parse(sessionUser)
     const doesSuperAdminHavePermission = true
-    const havePermission = validatePermission(permissionsList.third.view, session.data.user.permissions, doesSuperAdminHavePermission)
+    const havePermission = validatePermission(permissionsList.third.list, session.data.user.permissions, doesSuperAdminHavePermission)
 
     if (!havePermission) throw new PermissionNotAvailableException()
 

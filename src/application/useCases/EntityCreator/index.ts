@@ -17,6 +17,7 @@ export class EntityCreatorUseCase {
     if (body.name === undefined || body.name === '') throw new MissingPropertyException('name')
     if (body.entityTypeCode === undefined || body.entityTypeCode === '') throw new MissingPropertyException('entityTypeCode')
     if (body.document === undefined || body.document === '') throw new MissingPropertyException('document')
+    if (body.dv === undefined || body.dv === 0) throw new MissingPropertyException('dv')
     if (body.signatories === undefined || body.signatories.length === 0) throw new MissingPropertyException('signatories')
 
     const existEntity: boolean = await this._existEntityByDocumentService.run(body.document)

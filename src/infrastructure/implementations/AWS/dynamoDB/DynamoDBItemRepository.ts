@@ -1,6 +1,6 @@
 import path from 'path'
 import * as dotenv from 'dotenv'
-import { DynamoDBClient, PutItemCommand, ScanCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, PutItemCommand, GetItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { ItemRepository } from '../../../../domain/repositories/Item.repository'
 import { Item } from '../../../../domain/entities/Item.entity'
@@ -34,8 +34,14 @@ export class DynamoDBItemRepository implements ItemRepository {
           account: item.account ? Number(item.account) : undefined,
           description: item.description ?? '',
           price: Number(item.price) ?? null,
-          unitMeasure: item.unitMeasure ?? null,
-          itemType: item.itemType ?? null
+          unitMeasure: {
+            code: item.unitMeasure?.code ? Number(item.unitMeasure.code) : undefined,
+            description: item.unitMeasure?.description ?? undefined,
+          },
+          itemType: {
+            code: item.itemType?.code ? Number(item.itemType.code) : undefined,
+            description: item.itemType?.description ?? undefined,
+          }
         },{
           removeUndefinedValues: true
         })
@@ -49,17 +55,59 @@ export class DynamoDBItemRepository implements ItemRepository {
     }
   }
 
-  async getAll(entityId: string): Promise<Item[]> {
+  async update(item: Item): Promise<Item> {
     const params = {
       TableName: `${this._project}-${this._environment}-${this._table}`,
-      FilterExpression: 'entityId = :entityId',
+      Item: marshall({
+        entityId: item.entityId ?? '',
+        code: item.code ?? '',
+        account: item.account ? Number(item.account) : undefined,
+        description: item.description ?? '',
+        price: Number(item.price) ?? null,
+        unitMeasure: {
+          code: item.unitMeasure?.code ? Number(item.unitMeasure.code) : undefined,
+          description: item.unitMeasure?.description ?? undefined,
+        },
+        itemType: {
+          code: item.itemType?.code ? Number(item.itemType.code) : undefined,
+          description: item.itemType?.description ?? undefined,
+        }
+      },{
+        removeUndefinedValues: true
+      })
+    }
+    await this.client.send(new PutItemCommand(params))
+
+    return item
+  }
+
+  async getAll(entityId: string, limit?: number, lastEvaluatedKey?: any): Promise<{lastEvaluatedKey: any, items: Item[]}> {
+    const params : {
+      TableName: string
+      IndexName: string
+      KeyConditionExpression: string
+      ExpressionAttributeValues: any
+      ExclusiveStartKey?: any
+      Limit?: number
+    } = {
+      TableName: `${this._project}-${this._environment}-${this._table}`,
+      IndexName: 'entityId-code-index',
+      KeyConditionExpression: 'entityId = :entityId',
       ExpressionAttributeValues: {
         ':entityId': {
           S: entityId
         }
       }
     }
-    const response = await this.client.send(new ScanCommand(params))
+
+    if (limit !== undefined) {
+      params.Limit = limit
+    }
+
+    if (lastEvaluatedKey !== undefined) {
+      params.ExclusiveStartKey = lastEvaluatedKey
+    }
+    const response = await this.client.send(new QueryCommand(params))
 
     const itemsDB = (response.Items !== undefined) ? response.Items : []
 
@@ -87,7 +135,10 @@ export class DynamoDBItemRepository implements ItemRepository {
       }
     })
     
-    return items
+    return{
+      lastEvaluatedKey: response.LastEvaluatedKey,
+      items: items
+    }
   }
 
   async getByCode(code: string, entityId: string): Promise<Item | null> {
@@ -109,7 +160,7 @@ export class DynamoDBItemRepository implements ItemRepository {
       entityId: itemDB.entityId.S ?? '',
       code: itemDB.code.S ?? '',
       account: itemDB.account?.N ? Number(itemDB.account.N) : undefined, 
-      description: itemDB.code.S ?? '',
+      description: itemDB.description.S ?? '',
       price: Number(itemDB.price.S ?? itemDB.price.N) ?? undefined, // some products are string (fix this into db)
       unitMeasure: itemDB.unitMeasure.M !== undefined
         ?

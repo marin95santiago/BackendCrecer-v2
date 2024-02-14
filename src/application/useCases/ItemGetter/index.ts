@@ -8,8 +8,8 @@ export class ItemGetterUseCase {
     this._itemRepository = itemRepository
   }
 
-  async run (entityId: string): Promise<Item[]> {
-    const items: Item[] = await this._itemRepository.getAll(entityId)
-    return items
+  async run (entityId: string, limit?: number, lastEvaluatedKey?: any): Promise<{ lastEvaluatedKey: any, items: Item[] }> {
+    const response: { lastEvaluatedKey: any, items: Item[] } = await this._itemRepository.getAll(entityId, limit, lastEvaluatedKey)
+    return response
   }
 }

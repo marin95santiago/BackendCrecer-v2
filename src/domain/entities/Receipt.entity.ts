@@ -1,18 +1,31 @@
-export interface WayPay {
-  accountCode: string
-  total: number
+export interface AccountReceipt {
+  account: number
+  value: number
+  description?: string
+  costCenterCode: string
+}
+
+export interface ConceptReceipt {
+  account: number
+  value: number
+  description: string
+  costCenterCode: string
 }
 
 export interface Receipt {
   entityId: string
   userId: string
-  movementTypeCode: string
+  type: {
+    code: string
+    description: string
+  }
   date: string
-  serial: string
-  thirdId: string
-  selectedThirdRol: string
-  totalString: string
+  code: string
+  description: string
+  thirdDocument: string
+  totalValueLetter: string
   total: number
-  wayPays: WayPay[]
-  concepts: ['']
+  accounts: AccountReceipt[]
+  concepts: ConceptReceipt[]
+  status?: string
 }

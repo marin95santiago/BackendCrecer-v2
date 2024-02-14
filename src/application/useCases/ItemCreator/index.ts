@@ -17,6 +17,10 @@ export class ItemCreatorUseCase {
     if (body.code === undefined || body.code === '') throw new MissingPropertyException('code')
     if (body.description === undefined || body.description === '') throw new MissingPropertyException('description')
 
+    if (body.account) {
+      body.account = Number(body.account)
+    }
+
     const existItem: boolean = await this._existItemByCode.run(body.code, body.entityId)
     if (existItem) throw new AlreadyExistException('Item')
 
