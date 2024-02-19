@@ -4,18 +4,22 @@ import { MissingPropertyException } from '../../../domain/exceptions/common/Miss
 import { AccountReceipt, ConceptReceipt } from '../../../domain/entities/Receipt.entity'
 import { AccountRepository } from '../../../domain/repositories/Account.repository'
 import { Account } from '../../../domain/entities/Account.entity'
+import { TransferBetweenAccountRepository } from '../../../domain/repositories/TransferBetweenAccount.repository'
+import { TransferBetweenAccount } from '../../../domain/entities/TransferBetweenAccount.entity'
 
 
 export class DailyReportReceiptCreatorUseCase {
   private readonly _receiptRepository: ReceiptRepository
   private readonly _accountRepository: AccountRepository
+  private readonly _transferBetweenAccountRepository: TransferBetweenAccountRepository
 
-  constructor(receiptRepository: ReceiptRepository, accountRepository: AccountRepository) {
+  constructor(receiptRepository: ReceiptRepository, accountRepository: AccountRepository, transferBetweenAccountRepository: TransferBetweenAccountRepository) {
     this._receiptRepository = receiptRepository
     this._accountRepository = accountRepository
+    this._transferBetweenAccountRepository = transferBetweenAccountRepository
   }
 
-  getAccountsWithInitBalanceForDate (date: string, accounts: Account[], receipts: any[]) {
+  getAccountsWithInitBalanceForDate (accounts: Account[], receipts: any[], transfers: any []) {
     const response: Account[] = accounts
     // Modify balance for calculate init balance for date selected
     response.forEach(acc => {
@@ -26,9 +30,63 @@ export class DailyReportReceiptCreatorUseCase {
           }
         })
       })
+
+      transfers.forEach((transfer: any) => {
+        if (acc.account === transfer.sourceAccount) {
+          acc.balance = acc.balance + transfer.total
+        } else if (acc.account === transfer.destinationAccount) {
+          acc.balance = acc.balance - transfer.total
+        }
+      })
     })
 
     return response
+  }
+
+  buildAccountsConceptsForTransfers(impactedAccounts: AccountDailyReport[], impactedConcepts: ConceptDailyReport[], transfer: TransferBetweenAccount) {
+    const accounts: AccountDailyReport[] = impactedAccounts
+    const concepts: ConceptDailyReport[] = impactedConcepts
+  
+    accounts.forEach((acc: AccountDailyReport) => {
+      if (acc.account === transfer.sourceAccount) {
+        // Set concept
+        const concept: ConceptDailyReport = {
+          description: `Transferencia entre cuentas: origen: ${transfer.sourceAccount}, destino: ${transfer.destinationAccount}`,
+          account: transfer.sourceAccount,
+          type: {
+            code: 'EGR',
+            description: 'EGRESO'
+          },
+          receiptCode: transfer.code,
+          value: transfer.total
+        }
+        concepts.push(concept)
+
+        // Set value
+        acc.endBalance -= transfer.total
+      } else if (acc.account === transfer.destinationAccount) {
+        // Set concept
+        const concept: ConceptDailyReport = {
+          description: `Transferencia entre cuentas: origen: ${transfer.sourceAccount}, destino: ${transfer.destinationAccount}`,
+          account: transfer.sourceAccount,
+          type: {
+            code: 'ING',
+            description: 'INGRESO'
+          },
+          receiptCode: transfer.code,
+          value: transfer.total
+        }
+        concepts.push(concept)
+
+        // Set value
+        acc.endBalance += transfer.total
+      }
+    })
+
+    return {
+      accounts,
+      concepts
+    }
   }
 
   buildAccounts (accounts: AccountReceipt[], impactedAccounts: AccountDailyReport[]) {
@@ -70,9 +128,10 @@ export class DailyReportReceiptCreatorUseCase {
     const dateNow = new Date(timestamp)
     const formattedDate = formatDateToYYYYMMDD(dateNow)
     const receipts = (await this._receiptRepository.getByDateForDailyReport(entityId, date, formattedDate)).receipts
+    const transfers = (await this._transferBetweenAccountRepository.getByDateForDailyReport(entityId, date, formattedDate)).transfers
     const accounts = (await this._accountRepository.getAll(entityId)).accounts
 
-    const accountsWithInitBalanceForDate = this.getAccountsWithInitBalanceForDate(date, accounts, receipts)
+    const accountsWithInitBalanceForDate = this.getAccountsWithInitBalanceForDate(accounts, receipts, transfers)
 
     report.accounts = accountsWithInitBalanceForDate.map(acc => {
       return {
@@ -81,6 +140,12 @@ export class DailyReportReceiptCreatorUseCase {
         initBalance: acc.balance,
         endBalance: acc.balance
       }
+    })
+
+    transfers.filter(transfer => transfer.date === date).forEach((transfer: TransferBetweenAccount) => {
+      const transfers = this.buildAccountsConceptsForTransfers(report.accounts, report.concepts, transfer)
+      report.accounts = transfers.accounts
+      report.concepts = transfers.concepts
     })
 
     receipts.filter(receipt => receipt.date === date).forEach(receipt => {
