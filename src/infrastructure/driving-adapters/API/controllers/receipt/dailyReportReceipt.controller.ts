@@ -5,6 +5,7 @@ import { validatePermission } from '../../utils'
 import permissionsList from '../../permission.json'
 import { PermissionNotAvailableException } from '../../../../../domain/exceptions/common/PermissionNotAvailable.exception'
 import { DynamoDBAccountRepository } from '../../../../implementations/AWS/dynamoDB/DynamoDBAccountRepository'
+import { DynamoDBTransferBetweenAccountRepository } from '../../../../implementations/AWS/dynamoDB/DynamoDBTransferBetweenAccountRepository'
 
 
 export const dailyReportReceipt = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -17,7 +18,8 @@ export const dailyReportReceipt = async (req: Request, res: Response, next: Next
 
   const dynamoDBReceiptRepository = new DynamoDBReceiptRepository()
   const dynamoDBAccountRepository = new DynamoDBAccountRepository()
-  const receiptGetterUseCase = new DailyReportReceiptCreatorUseCase(dynamoDBReceiptRepository, dynamoDBAccountRepository)
+  const dynamoDBTransferBetweenAccountRepository = new DynamoDBTransferBetweenAccountRepository()
+  const receiptGetterUseCase = new DailyReportReceiptCreatorUseCase(dynamoDBReceiptRepository, dynamoDBAccountRepository, dynamoDBTransferBetweenAccountRepository)
 
   try {
     const session = JSON.parse(sessionUser)

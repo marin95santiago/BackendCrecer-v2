@@ -46,6 +46,7 @@ import { createAccount } from './account/createAccount.controller'
 import { updateAccount } from './account/updateAccount.controller'
 import { getAllAccounts } from './account/getAllAccounts.controller'
 import { getAccountByAccount } from './account/getAccountByAccount.controller'
+import { transferBetweenAccount } from './account/transferBetweenAccount.controller'
 
 // Receipts
 import { createReceipt } from './receipt/createReceipt.controller'
@@ -84,6 +85,7 @@ export {
   updateAccount as updateAccountController,
   getAllAccounts as getAllAccountsController,
   getAccountByAccount as getAccountByAccountController,
+  transferBetweenAccount as transferBetweenAccountController,
   createReceipt as createReceiptController,
   updateReceipt as updateReceiptController,
   getAllReceipts as getAllReceiptsController,
