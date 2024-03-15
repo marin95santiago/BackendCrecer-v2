@@ -8,6 +8,7 @@ dotenv.config({
 })
 
 const URL_PLEMSI = process.env.URL_PLEMSI || ''
+const PLEMSI_ERROR_BILL_STILL_PENDING_EMIT_CODE = process.env.PLEMSI_ERROR_BILL_STILL_PENDING_EMIT_CODE || ''
 
 export class BillPlemsiService {
   async run (electronicBill: ElectronicBillPlemsi, apiKey: string): Promise<AxiosResponse> {
@@ -20,6 +21,9 @@ export class BillPlemsiService {
       return response
     } catch (error) {
       if (isAxiosError(error)) {
+        if (error.response?.data?.errCode === PLEMSI_ERROR_BILL_STILL_PENDING_EMIT_CODE) {
+          return error.response;
+        }
         throw JSON.stringify(error.response?.data)
       } else {
         throw 'Error en el facturador de Plemsi'
