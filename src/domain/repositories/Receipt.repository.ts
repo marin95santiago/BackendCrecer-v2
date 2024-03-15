@@ -5,5 +5,6 @@ export interface ReceiptRepository {
   save: (receipt: Receipt) => Promise<Receipt>
   getByCode: (entityId: string, code: string) => Promise<Receipt | null>
   getByDateForDailyReport: (entityId: string, startDate: string, endDate: string, limit?: number, lastEvaluatedKey?: any) => Promise<{lastEvaluatedKey: any, receipts: any[]}>
+  getByDateForExport: (entityId: string, startDate: string, endDate: string, limit?: number, lastEvaluatedKey?: any) => Promise<{lastEvaluatedKey: any, receipts: Receipt[]}>
   update: (receipt: Receipt) => Promise<Receipt>
 }

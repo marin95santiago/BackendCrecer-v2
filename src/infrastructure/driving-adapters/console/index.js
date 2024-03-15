@@ -21,6 +21,10 @@ const contables = [
   {
     idItem: '05',
     cuenta_contable: '4160050400'
+  },
+  {
+    idItem: '06',
+    cuenta_contable: '4160050600'
   }
 ]
 
