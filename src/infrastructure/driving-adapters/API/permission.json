@@ -12,7 +12,10 @@
   "electronic_bill": {
     "view": "electronic_bill_view",
     "create": "electronic_bill_create",
-    "list": "electronic_bill_list"
+    "list": "electronic_bill_list",
+    "schedule_create": "electronic_bill_schedule_create",
+    "schedule_view": "electronic_bill_schedule_view",
+    "schedule_delete": "electronic_bill_schedule_delete"
   },
   "item": {
     "view": "item_view",
