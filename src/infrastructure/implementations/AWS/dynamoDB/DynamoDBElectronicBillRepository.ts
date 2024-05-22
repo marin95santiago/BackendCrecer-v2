@@ -35,6 +35,8 @@ export class DynamoDBElectronicBillRepository implements ElectronicBillRepositor
         total: bill.total ?? 0,
         totalTaxes: bill.totalTaxes ?? 0,
         totalToPay: bill.totalToPay ?? 0
+      }, {
+        removeUndefinedValues: true
       })
     }
     await this.client.send(new PutItemCommand(params))
