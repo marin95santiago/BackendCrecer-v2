@@ -16,6 +16,8 @@ import { login } from './login/login.controller'
 import { createElectronicBill } from './bill/createElectronicBill.controller'
 import { getAllElectronicBills } from './bill/getAllElectronicBills.controller'
 import { getElectronicBillByNumber } from './bill/getElectronicBillByNumber.controller'
+import { getSchedules as getElectronicBillSchedules } from './bill/getSchedules.controller'
+import { deleteSchedule as deleteElectronicBillSchedule } from './bill/deleteSchedule.controller'
 
 // Items
 import { createItem } from './item/createItem.controller'
@@ -69,6 +71,8 @@ export {
   createElectronicBill as createElectronicBillController,
   getAllElectronicBills as getAllElectronicBillsController,
   getElectronicBillByNumber as getElectronicBillByNumberController,
+  getElectronicBillSchedules as getElectronicBillSchedulesController,
+  deleteElectronicBillSchedule as deleteElectronicBillScheduleController,
   createItem as createItemController,
   getItemByCode as getItemByCodeController,
   updateItem as updateItemController,
