@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import * as http from 'http'
 import routes from './routes'
-// import '../automaticTasks/createElectronicBills.cron'
+import '../automaticTasks/createElectronicBills.cron'
 
 export class Server {
   private readonly _port: string
