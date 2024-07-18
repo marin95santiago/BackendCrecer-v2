@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-api-dev": "nodemon ./src/infrastructure/driving-adapters/API/start.ts",
-    "start-api-prod": "pm2 start ./dist/infrastructure/driving-adapters/API/start.js",
+    "start-api-develop": "pm2 start ./dist/infrastructure/driving-adapters/API/start.js --name develop",
+    "start-api-prod": "pm2 start ./dist/infrastructure/driving-adapters/API/start.js --name prod",
     "export": "node ./src/infrastructure/driving-adapters/console/index.js",
     "setValid": "node ./src/infrastructure/driving-adapters/console/setValidValue.js",
     "export-rc": "node ./src/infrastructure/driving-adapters/console/exportReceipts.js"
