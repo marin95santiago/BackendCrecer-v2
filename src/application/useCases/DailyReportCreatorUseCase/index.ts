@@ -117,7 +117,7 @@ export class DailyReportReceiptCreatorUseCase {
     return response
   }
 
-  async run (entityId: string, date: string): Promise<DailyReportReceipt> {
+  async run (entityId: string, date: string, toDate?: string): Promise<DailyReportReceipt> {
     if (!date || date === '') throw new MissingPropertyException('date')
     const report: DailyReportReceipt = {
       date: date,
@@ -127,8 +127,8 @@ export class DailyReportReceiptCreatorUseCase {
     const timestamp = Date.now()
     const dateNow = new Date(timestamp)
     const formattedDate = formatDateToYYYYMMDD(dateNow)
-    const receipts = (await this._receiptRepository.getByDateForDailyReport(entityId, date, formattedDate)).receipts
-    const transfers = (await this._transferBetweenAccountRepository.getByDateForDailyReport(entityId, date, formattedDate)).transfers
+    const receipts = (await this._receiptRepository.getByDateForDailyReport(entityId, date, toDate ?? formattedDate)).receipts
+    const transfers = (await this._transferBetweenAccountRepository.getByDateForDailyReport(entityId, date, toDate ?? formattedDate)).transfers
     const accounts = (await this._accountRepository.getAll(entityId)).accounts
 
     const accountsWithInitBalanceForDate = this.getAccountsWithInitBalanceForDate(accounts, receipts, transfers)
@@ -142,13 +142,13 @@ export class DailyReportReceiptCreatorUseCase {
       }
     })
 
-    transfers.filter(transfer => transfer.date === date).forEach((transfer: TransferBetweenAccount) => {
+    transfers.forEach((transfer: TransferBetweenAccount) => {
       const transfers = this.buildAccountsConceptsForTransfers(report.accounts, report.concepts, transfer)
       report.accounts = transfers.accounts
       report.concepts = transfers.concepts
     })
 
-    receipts.filter(receipt => receipt.date === date).forEach(receipt => {
+    receipts.forEach(receipt => {
       report.accounts = this.buildAccounts(receipt.accounts, report.accounts)
       report.concepts = this.buildConcepts(receipt, report.concepts)
     })

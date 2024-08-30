@@ -10,10 +10,11 @@ import { DynamoDBTransferBetweenAccountRepository } from '../../../../implementa
 
 export const dailyReportReceipt = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { sessionUser } = req.params
-  const { date } = req.query
+  const { date, toDate } = req.query
 
   const params = {
-    date: `${date}`
+    date: `${date}`,
+    toDate: `${toDate}`
   }
 
   const dynamoDBReceiptRepository = new DynamoDBReceiptRepository()
@@ -28,7 +29,7 @@ export const dailyReportReceipt = async (req: Request, res: Response, next: Next
 
     if (!havePermission) throw new PermissionNotAvailableException()
 
-    const response = await receiptGetterUseCase.run(session.data.user.entityId, params.date)
+    const response = await receiptGetterUseCase.run(session.data.user.entityId, params.date, params.toDate)
     res.json(response)
     return
   } catch (e) { 
