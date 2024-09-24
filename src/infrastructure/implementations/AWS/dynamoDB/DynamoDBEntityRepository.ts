@@ -34,7 +34,7 @@ export class DynamoDBEntityRepository implements EntityRepository {
         resolutionText: entity.resolutionText ?? undefined,
         lastElectronicBillNumber: entity.lastElectronicBillNumber ? Number(entity.lastElectronicBillNumber) : undefined,
         receiptNumbers: entity.receiptNumbers ?? undefined
-      })
+      }, { removeUndefinedValues: true })
     }
     await this.client.send(new PutItemCommand(params))
 

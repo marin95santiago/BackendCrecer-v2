@@ -10,7 +10,7 @@
     "start-api-prod": "pm2 start ./dist/infrastructure/driving-adapters/API/start.js --name prod",
     "export": "node ./src/infrastructure/driving-adapters/console/index.js",
     "setValid": "node ./src/infrastructure/driving-adapters/console/setValidValue.js",
-    "export-rc": "node ./src/infrastructure/driving-adapters/console/exportReceipts.js"
+    "export-rc": "node ./dist/infrastructure/driving-adapters/console/export.js"
   },
   "author": "crecer dmc",
   "license": "ISC",
