@@ -124,11 +124,26 @@ export class DailyReportReceiptCreatorUseCase {
       accounts: [],
       concepts: []
     }
-    const timestamp = Date.now()
-    const dateNow = new Date(timestamp)
-    const formattedDate = formatDateToYYYYMMDD(dateNow)
-    const receipts = (await this._receiptRepository.getByDateForDailyReport(entityId, date, toDate ?? formattedDate)).receipts
-    const transfers = (await this._transferBetweenAccountRepository.getByDateForDailyReport(entityId, date, toDate ?? formattedDate)).transfers
+
+    let dates = [ date ]
+  
+    if (toDate) {
+      dates = generateDatesPeriod(date, toDate)
+    }
+
+    const receiptQueries = dates.map(dateFor => {
+      return this._receiptRepository.getByDateForDailyReport(entityId, dateFor)
+      
+    })
+
+    const transferQueries = dates.map(dateFor => {
+      return this._transferBetweenAccountRepository.getByDateForDailyReport(entityId, dateFor)
+    })
+
+    const receipts = (await Promise.all(receiptQueries)).flatMap(rece => rece.receipts);
+  
+    const transfers = (await Promise.all(transferQueries)).flatMap(rece => rece.transfers);
+    
     const accounts = (await this._accountRepository.getAll(entityId)).accounts
 
     const accountsWithInitBalanceForDate = this.getAccountsWithInitBalanceForDate(accounts, receipts, transfers)
@@ -162,4 +177,17 @@ function formatDateToYYYYMMDD(date: Date) {
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
+}
+
+function generateDatesPeriod(date: string, toDate: string): string[] {
+  const dates = [];
+  let current = new Date(date);
+  const end = new Date(toDate);
+
+  while (current <= end) {
+    dates.push(current.toISOString().split('T')[0]);
+    current.setDate(current.getDate() + 1);
+  }
+
+  return dates;
 }

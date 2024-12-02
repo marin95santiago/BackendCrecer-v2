@@ -184,14 +184,14 @@ export class DynamoDBElectronicBillRepository implements ElectronicBillRepositor
             unitMeasure: itemBill.M.unitMeasure.M !== undefined
               ?
               {
-                code: itemBill.M.unitMeasure.M.code.N ?? '',
+                code: itemBill.M.unitMeasure.M.code.N ? itemBill.M.unitMeasure.M.code.N : itemBill.M.unitMeasure.M.code.S,
                 description: itemBill.M.unitMeasure.M.description.S ?? ''
               }
               : undefined,
             itemType: itemBill.M.itemType.M !== undefined
               ?
               {
-                code: itemBill.M.itemType.M.code.N ?? '',
+                code: itemBill.M.itemType.M.code.N ? itemBill.M.itemType.M.code.N : itemBill.M.itemType.M.code.S,
                 description: itemBill.M.itemType.M.description.S ?? ''
               }
               : {code: '', description: ''},
@@ -393,7 +393,7 @@ export class DynamoDBElectronicBillRepository implements ElectronicBillRepositor
             itemType: itemBill.M.itemType.M !== undefined
               ?
               {
-                code: itemBill.M.itemType.M.code.N ?? '',
+                code: itemBill.M.itemType.M.code.N ? itemBill.M.itemType.M.code.N : Number(itemBill.M.itemType.M.code.S),
                 description: itemBill.M.itemType.M.description.S ?? ''
               }
               : undefined,

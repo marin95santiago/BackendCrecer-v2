@@ -3,5 +3,5 @@ import { TransferBetweenAccount } from 'domain/entities/TransferBetweenAccount.e
 export interface TransferBetweenAccountRepository {
   getAll: (entityId: string, limit?: number, lastEvaluatedKey?: any) => Promise<{lastEvaluatedKey: any, transfers: TransferBetweenAccount[]}>
   save: (transfer: TransferBetweenAccount) => Promise<TransferBetweenAccount>
-  getByDateForDailyReport: (entityId: string, startDate: string, endDate: string, limit?: number, lastEvaluatedKey?: any) => Promise<{lastEvaluatedKey: any, transfers: any[]}>
+  getByDateForDailyReport: (entityId: string, date: string, limit?: number, lastEvaluatedKey?: any) => Promise<{lastEvaluatedKey: any, transfers: any[]}>
 }
