@@ -93,7 +93,7 @@ export class DynamoDBTransferBetweenAccountRepository implements TransferBetween
     }
   }
 
-  async getByDateForDailyReport(entityId: string, startDate: string, endDate: string, limit?: number, lastEvaluatedKey?: any): Promise<{ lastEvaluatedKey: any, transfers: any[] }> {
+  async getByDateForDailyReport(entityId: string, date: string, limit?: number, lastEvaluatedKey?: any): Promise<{ lastEvaluatedKey: any, transfers: any[] }> {
     const params: {
       TableName: string
       IndexName: string
@@ -107,16 +107,13 @@ export class DynamoDBTransferBetweenAccountRepository implements TransferBetween
     } = {
       TableName: `${this._project}-${this._environment}-${this._table}`,
       IndexName: 'entityId-date-index',
-      KeyConditionExpression: 'entityId = :entityId AND #date BETWEEN :startDate AND :endDate',
+      KeyConditionExpression: 'entityId = :entityId AND #date = :date',
       ExpressionAttributeValues: {
         ':entityId': {
           S: entityId
         },
-        ':startDate': {
-          S: startDate
-        },
-        ':endDate': {
-          S: endDate
+        ':date': {
+          S: date
         },
         ':status': {
           S: 'VALID'
