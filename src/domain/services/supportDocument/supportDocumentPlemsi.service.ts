@@ -1,7 +1,7 @@
 import path from 'path'
 import * as dotenv from 'dotenv'
 import axios, { AxiosResponse, isAxiosError } from 'axios'
-import { ElectronicBillPlemsi } from '../../../domain/entities/ElectronicBill.entity'
+import { SupportDocumentPlemsi } from '../../../domain/entities/SupportDocument.entity'
 
 dotenv.config({
   path: path.resolve(__dirname, '../../../../.env')
@@ -10,16 +10,18 @@ dotenv.config({
 const URL_PLEMSI = process.env.URL_PLEMSI || ''
 const PLEMSI_ERROR_BILL_STILL_PENDING_EMIT_CODE = process.env.PLEMSI_ERROR_BILL_STILL_PENDING_EMIT_CODE || ''
 
-export class BillPlemsiService {
-  async run (electronicBill: ElectronicBillPlemsi, apiKey: string): Promise<AxiosResponse> {
+export class SupportDocumentPlemsiService {
+  async run (supportDocument: SupportDocumentPlemsi, apiKey: string): Promise<AxiosResponse> {
     try {
-      const url = `${URL_PLEMSI}/billing/invoice`
-      const response = await axios.post(url, electronicBill, {
+      const url = `${URL_PLEMSI}/purchase/invoice`
+
+      const response = await axios.post(url, supportDocument, {
         headers: {
           Authorization: `Bearer ${apiKey}`
         }
       })
-      return response
+
+      return response;
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response?.data?.errCode === PLEMSI_ERROR_BILL_STILL_PENDING_EMIT_CODE) {

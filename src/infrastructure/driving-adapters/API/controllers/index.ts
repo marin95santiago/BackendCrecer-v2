@@ -19,6 +19,10 @@ import { getElectronicBillByNumber } from './bill/getElectronicBillByNumber.cont
 import { getSchedules as getElectronicBillSchedules } from './bill/getSchedules.controller'
 import { deleteSchedule as deleteElectronicBillSchedule } from './bill/deleteSchedule.controller'
 
+// Support Document
+import { createSupportDocument } from './supportDocument/createSupportDocument.controller'
+import { getSupportDocument } from './supportDocument/getSupportDocument.controller'
+
 // Items
 import { createItem } from './item/createItem.controller'
 import { getAllItems } from './item/getAllItems.controller'
@@ -73,6 +77,8 @@ export {
   getElectronicBillByNumber as getElectronicBillByNumberController,
   getElectronicBillSchedules as getElectronicBillSchedulesController,
   deleteElectronicBillSchedule as deleteElectronicBillScheduleController,
+  createSupportDocument as createSupportDocumentController,
+  getSupportDocument as getSupportDocumentController,
   createItem as createItemController,
   getItemByCode as getItemByCodeController,
   updateItem as updateItemController,

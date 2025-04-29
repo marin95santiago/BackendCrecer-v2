@@ -32,7 +32,10 @@ export class DynamoDBEntityRepository implements EntityRepository {
         state: entity.state ?? '',
         resolution: entity.resolution ?? undefined,
         resolutionText: entity.resolutionText ?? undefined,
+        resolutionDS: entity.resolutionDS ?? undefined,
+        resolutionTextDS: entity.resolutionTextDS ?? undefined,
         lastElectronicBillNumber: entity.lastElectronicBillNumber ? Number(entity.lastElectronicBillNumber) : undefined,
+        lastSupportDocumentNumber: entity.lastSupportDocumentNumber ? Number(entity.lastSupportDocumentNumber) : undefined,
         receiptNumbers: entity.receiptNumbers ?? undefined
       }, { removeUndefinedValues: true })
     }
@@ -136,7 +139,10 @@ export class DynamoDBEntityRepository implements EntityRepository {
         : undefined,
       resolution: item.resolution.S ?? undefined,
       resolutionText: item.resolutionText.S ?? undefined,
+      resolutionDS: item.resolutionDS?.S ?? undefined,
+      resolutionTextDS: item.resolutionTextDS?.S ?? undefined,
       lastElectronicBillNumber: item.lastElectronicBillNumber.N ? Number(item.lastElectronicBillNumber.N) : undefined,
+      lastSupportDocumentNumber: item.lastSupportDocumentNumber?.N ? Number(item.lastSupportDocumentNumber.N) : undefined,
       receiptNumbers: item.receiptNumbers.L !== undefined
         ?
           (
@@ -220,7 +226,10 @@ export class DynamoDBEntityRepository implements EntityRepository {
         : undefined,
       resolution: item.resolution.S ?? undefined,
       resolutionText: item.resolutionText.S ?? undefined,
+      resolutionDS: item.resolutionDS?.S ?? undefined,
+      resolutionTextDS: item.resolutionTextDS?.S ?? undefined,
       lastElectronicBillNumber: item.lastElectronicBillNumber.N ? Number(item.lastElectronicBillNumber.N) : undefined,
+      lastSupportDocumentNumber: item.lastSupportDocumentNumber?.N ? Number(item.lastSupportDocumentNumber.N) : undefined,
       receiptNumbers: item.receiptNumbers.L !== undefined
         ?
           (
@@ -254,7 +263,10 @@ export class DynamoDBEntityRepository implements EntityRepository {
         state: entity.state ?? '',
         resolution: entity.resolution ?? undefined,
         resolutionText: entity.resolutionText ?? undefined,
+        resolutionDS: entity.resolutionDS ?? undefined,
+        resolutionTextDS: entity.resolutionTextDS ?? undefined,
         lastElectronicBillNumber: entity.lastElectronicBillNumber ? Number(entity.lastElectronicBillNumber) : undefined,
+        lastSupportDocumentNumber: entity.lastSupportDocumentNumber ? Number(entity.lastSupportDocumentNumber) : undefined,
         receiptNumbers: entity.receiptNumbers ?? undefined
       })
     }

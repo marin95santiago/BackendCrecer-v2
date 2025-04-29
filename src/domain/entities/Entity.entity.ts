@@ -35,6 +35,9 @@ export interface Entity {
   state: string
   resolution?: string
   resolutionText?: string,
+  resolutionDS?: string
+  resolutionTextDS?: string,
   lastElectronicBillNumber?: number
+  lastSupportDocumentNumber?: number
   receiptNumbers?: ReceiptNumbers[]
 }
