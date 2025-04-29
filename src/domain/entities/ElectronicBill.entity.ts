@@ -26,6 +26,10 @@ export interface ItemPlemsi {
   base_quantity: number
   invoiced_quantity: number
   tax_totals: TaxPlemsi[]
+  brandname?: string
+  modelname?: string
+  start_date?: string
+  type_generation_transmition_id?: number
 }
 
 export interface Item {

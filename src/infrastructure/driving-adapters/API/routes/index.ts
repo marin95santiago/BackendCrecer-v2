@@ -9,6 +9,7 @@ import conceptRoutes from './concept.routes'
 import costCenterRoutes from './costCenter.route'
 import accountRoutes from './account.routes'
 import receiptRoutes from './receipt.routes'
+import supportDocumentRoutes from './supportDocument.routes'
 import { UserAlreadyExistException } from '../../../../domain/exceptions/user/UserAlreadyExist.exception'
 import { UserNotFoundException } from '../../../../domain/exceptions/user/UserNotFound.exception'
 import { LoginWrongPasswordException } from '../../../../domain/exceptions/user/LoginWrongPassword.exception'
@@ -30,6 +31,7 @@ route.use('/api/v2/concept', conceptRoutes)
 route.use('/api/v2/cost-center', costCenterRoutes)
 route.use('/api/v2/account', accountRoutes)
 route.use('/api/v2/receipt', receiptRoutes)
+route.use('/api/v2/support-document', supportDocumentRoutes)
 
 route.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof UserAlreadyExistException) {

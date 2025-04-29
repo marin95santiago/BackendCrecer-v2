@@ -17,6 +17,11 @@
     "schedule_view": "electronic_bill_schedule_view",
     "schedule_delete": "electronic_bill_schedule_delete"
   },
+  "support_document": {
+    "view": "support_document_view",
+    "create": "support_document_create",
+    "list": "support_document_list"
+  },
   "item": {
     "view": "item_view",
     "create": "item_create",
