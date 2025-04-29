@@ -9,9 +9,9 @@ dotenv.config({
 const URL_PLEMSI = process.env.URL_PLEMSI || ''
 
 export class GetSupportDocumentPlemsiService {
-  async run (apiKey: string): Promise<AxiosResponse> {
+  async run (apiKey: string, page: number): Promise<AxiosResponse> {
     try {
-      const url = `${URL_PLEMSI}/purchase/invoice?page=1&perPage=500&state=Emit`
+      const url = `${URL_PLEMSI}/purchase/invoice?page=${page}&perPage=100`
 
       const response = await axios.get(url, {
         headers: {

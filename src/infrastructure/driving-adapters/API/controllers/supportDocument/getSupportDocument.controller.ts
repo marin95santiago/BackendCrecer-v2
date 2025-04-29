@@ -7,6 +7,7 @@ import { SupportDocumentGetterUseCase } from '../../../../../application/useCase
 
 export const getSupportDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { sessionUser } = req.params
+  const { page } = req.query
 
   const dynamoDBEntityRepository = new DynamoDBEntityRepository()
   const electronicBillGetterUseCase = new SupportDocumentGetterUseCase (dynamoDBEntityRepository)
@@ -17,7 +18,7 @@ export const getSupportDocument = async (req: Request, res: Response, next: Next
     const havePermission = validatePermission(permissionsList.support_document.list, session.data.user.permissions, doesSuperAdminHavePermission)
     if (!havePermission) throw new PermissionNotAvailableException()
 
-    const supportDocumentList = await electronicBillGetterUseCase.run(session.data.user.entityId)
+    const supportDocumentList = await electronicBillGetterUseCase.run(session.data.user.entityId, Number(page))
 
     res.json(supportDocumentList)
   } catch (error) {

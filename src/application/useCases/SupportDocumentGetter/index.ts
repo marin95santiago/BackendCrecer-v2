@@ -19,12 +19,12 @@ export class SupportDocumentGetterUseCase {
     this._getEntityByIdService = new GetEntityByIdService(entityRepository)
   }
 
-  async run (entityId: string): Promise<{ data: AxiosResponse }> {
+  async run (entityId: string, page: number): Promise<{ data: AxiosResponse }> {
     try {
       const entity = await this._getEntityByIdService.run(entityId || '')
       if (entity) {
         // Validate and create bill on DIAN
-        const response = await this._billPlemsiService.run(entity.apiKeyPlemsi ?? '')
+        const response = await this._billPlemsiService.run(entity.apiKeyPlemsi ?? '', page)
 
         return { data: response.data }
 
