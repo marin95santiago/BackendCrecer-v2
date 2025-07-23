@@ -39,5 +39,6 @@ export interface Entity {
   resolutionTextDS?: string,
   lastElectronicBillNumber?: number
   lastSupportDocumentNumber?: number
-  receiptNumbers?: ReceiptNumbers[]
+  receiptNumbers?: ReceiptNumbers[],
+  prefix?: string
 }

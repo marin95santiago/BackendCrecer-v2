@@ -21,7 +21,8 @@ export const createEntity = async (req: Request, res: Response, next: NextFuncti
     resolution,
     resolutionText,
     lastElectronicBillNumber,
-    receiptNumbers
+    receiptNumbers,
+    prefix
   } = req.body
 
   const { sessionUser } = req.params
@@ -51,6 +52,7 @@ export const createEntity = async (req: Request, res: Response, next: NextFuncti
       resolution,
       resolutionText,
       lastElectronicBillNumber,
+      prefix,
       receiptNumbers: receiptNumbers.map((rn: any) => {
         return {
           lastReceiptNumber: Number(rn.lastReceiptNumber),
