@@ -35,7 +35,8 @@ export class ElectronicBillCreatorUseCase {
         bill.number = number
         const dataPlemsi = electronicBillPlemsiMapper(bill, {
           resolution: entity.resolution ?? '',
-          resolutionText: entity.resolutionText ?? ''
+          resolutionText: entity.resolutionText ?? '',
+          prefix: entity.prefix ?? undefined
         })
 
         // Validate and create bill on DIAN

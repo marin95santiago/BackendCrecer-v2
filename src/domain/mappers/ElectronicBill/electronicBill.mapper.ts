@@ -11,13 +11,14 @@ const prefixPlemsi = process.env.PREFIX_PLEMSI ?? 'SETT'
 interface EntityDataForPlemsi {
   resolution: string
   resolutionText: string
+  prefix?: string
 }
 
 export function electronicBillPlemsiMapper(bill: ElectronicBill, entityData: EntityDataForPlemsi): ElectronicBillPlemsi {
   return {
     date: bill.date ?? '',
     time: "12:21:00",
-    prefix: prefixPlemsi,
+    prefix: entityData.prefix ?? prefixPlemsi,
     number: bill.number ?? 0,
     orderReference: {
       id_order: bill.orderReference

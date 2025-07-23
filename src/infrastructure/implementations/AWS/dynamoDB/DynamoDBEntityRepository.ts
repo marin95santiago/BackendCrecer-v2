@@ -24,6 +24,7 @@ export class DynamoDBEntityRepository implements EntityRepository {
         entityTypeCode: entity.entityTypeCode ?? '',
         document: entity.document ?? '',
         dv: entity.dv ? Number(entity.dv) : 0,
+        prefix: entity.prefix ?? undefined,
         signatories: entity.signatories ?? undefined,
         address: entity.address ?? undefined,
         email: entity.email ?? '',
@@ -95,6 +96,7 @@ export class DynamoDBEntityRepository implements EntityRepository {
       entityTypeCode: item.entityTypeCode.S ?? '',
       document: item.document.S ?? '',
       dv: item.dv ? Number(item.dv.N) : 0,
+      prefix: item.prefix ? item.prefix.S : undefined,
       address: item.address?.M !== undefined
         ?
           {
@@ -182,6 +184,7 @@ export class DynamoDBEntityRepository implements EntityRepository {
       entityTypeCode: item.entityTypeCode.S ?? '',
       document: item.document.S ?? '',
       dv: item.dv ? Number(item.dv.N) : 0,
+      prefix: item.prefix ? item.prefix.S : undefined,
       address: item.address?.M !== undefined
         ?
           {
@@ -255,6 +258,7 @@ export class DynamoDBEntityRepository implements EntityRepository {
         entityTypeCode: entity.entityTypeCode ?? '',
         document: entity.document ?? '',
         dv: entity.dv ? Number(entity.dv) : 0,
+        prefix: entity.prefix ?? undefined,
         signatories: entity.signatories ?? undefined,
         address: entity.address ?? undefined,
         email: entity.email ?? '',
