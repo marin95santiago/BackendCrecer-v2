@@ -40,7 +40,8 @@ export function electronicBillPlemsiMapper(bill: ElectronicBill, entityData: Ent
     payment: {
       payment_form_id: Number(bill.wayToPay.code) ?? 0,
       payment_method_id: Number(bill.paymentMethod.code) ?? 0,
-      payment_due_date: bill.paymentDueDate ?? ''
+      payment_due_date: bill.paymentDueDate ?? '',
+      duration_measure: Number(bill.wayToPay.code) === 1 ? undefined : "30"
     },
     items: itemsPlemsiMapper(bill.items),
     resolution: entityData.resolution,
