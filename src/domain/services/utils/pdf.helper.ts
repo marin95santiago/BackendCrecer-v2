@@ -147,7 +147,7 @@ export const generateElectronicInvoiceHTML = (responseData: any, company: Compan
   // Datos del emisor (empresa) - usar información real de la empresa
   const companyName = company.name;
   const companyId = company.document;
-  const companyAddress = company.address;
+  const companyAddress = company.address ? `${company.address.description}, ${company.address.city.description}` : 'N/A';
   const companyPhone = company.phone;
   const companyEmail = company.email;
 
@@ -160,7 +160,7 @@ export const generateElectronicInvoiceHTML = (responseData: any, company: Compan
 
   // Datos de la factura
   const invoiceNumber = `${invoice.prefix || ''} ${invoice.number || ''}`.trim();
-  const resolution = invoice.resolution || company.resolution || 'N/A';
+  const resolution = invoice.resolutionText || company.resolutionText || 'N/A';
   const issueDate = formatDate(invoice.date || new Date().toISOString());
   const issueTime = formatTime(invoice.time || '00:00');
   const cude = invoice.cude || 'N/A';
@@ -492,7 +492,7 @@ export const generateElectronicSupportDocumentHTML = (responseData: any, company
   // Datos del emisor (empresa) - usar información real de la empresa
   const companyName = company.name;
   const companyId = company.document;
-  const companyAddress = company.address;
+  const companyAddress = company.address ? `${company.address.description}, ${company.address.city.description}` : 'N/A';
   const companyPhone = company.phone;
   const companyEmail = company.email;
 
@@ -505,7 +505,7 @@ export const generateElectronicSupportDocumentHTML = (responseData: any, company
 
   // Datos del documento soporte
   const documentNumber = `${supportDocument.prefix || PREFIX_SUPPORT_DOCUMENT_PLEMSI} ${supportDocument.number || ''}`.trim();
-  const resolution = supportDocument.resolution || company.resolutionDS || 'N/A';
+  const resolution = supportDocument.resolutionText || company.resolutionTextDS || 'N/A';
   const issueDate = formatDate(supportDocument.date || new Date().toISOString());
   const issueTime = formatTime(supportDocument.time || '00:00');
   const cude = supportDocument.cude || 'N/A';
