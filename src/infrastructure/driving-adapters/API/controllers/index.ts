@@ -16,12 +16,14 @@ import { login } from './login/login.controller'
 import { createElectronicBill } from './bill/createElectronicBill.controller'
 import { getAllElectronicBills } from './bill/getAllElectronicBills.controller'
 import { getElectronicBillByNumber } from './bill/getElectronicBillByNumber.controller'
+import { getElectronicInvoiceHTML } from './bill/getElectronicInvoiceHTML.controller'
 import { getSchedules as getElectronicBillSchedules } from './bill/getSchedules.controller'
 import { deleteSchedule as deleteElectronicBillSchedule } from './bill/deleteSchedule.controller'
 
 // Support Document
 import { createSupportDocument } from './supportDocument/createSupportDocument.controller'
 import { getSupportDocument } from './supportDocument/getSupportDocument.controller'
+import { getSupportDocumentHTML } from './supportDocument/getSupportDocumentHTML.controller'
 
 // Items
 import { createItem } from './item/createItem.controller'
@@ -75,10 +77,12 @@ export {
   createElectronicBill as createElectronicBillController,
   getAllElectronicBills as getAllElectronicBillsController,
   getElectronicBillByNumber as getElectronicBillByNumberController,
+  getElectronicInvoiceHTML as getElectronicInvoiceHTMLController,
   getElectronicBillSchedules as getElectronicBillSchedulesController,
   deleteElectronicBillSchedule as deleteElectronicBillScheduleController,
   createSupportDocument as createSupportDocumentController,
   getSupportDocument as getSupportDocumentController,
+  getSupportDocumentHTML as getSupportDocumentHTMLController,
   createItem as createItemController,
   getItemByCode as getItemByCodeController,
   updateItem as updateItemController,

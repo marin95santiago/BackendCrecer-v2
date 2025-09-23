@@ -13,7 +13,7 @@ export const validateToken = async (req: Request, res: Response, next: NextFunct
       if (error !== null) {
         throw new UnhandledException('Token')
       }
-      // Set user information on params
+      // Set user information on params without overwriting existing params
       req.params.sessionUser = JSON.stringify(decoded)
       next()
     })
