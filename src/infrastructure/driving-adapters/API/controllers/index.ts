@@ -19,6 +19,7 @@ import { getElectronicBillByNumber } from './bill/getElectronicBillByNumber.cont
 import { getElectronicInvoiceHTML } from './bill/getElectronicInvoiceHTML.controller'
 import { getSchedules as getElectronicBillSchedules } from './bill/getSchedules.controller'
 import { deleteSchedule as deleteElectronicBillSchedule } from './bill/deleteSchedule.controller'
+import { getElectronicBillsFromPlemsi } from './bill/getElectronicBillsFromPlemsi.controller'
 
 // Support Document
 import { createSupportDocument } from './supportDocument/createSupportDocument.controller'
@@ -80,6 +81,7 @@ export {
   getElectronicInvoiceHTML as getElectronicInvoiceHTMLController,
   getElectronicBillSchedules as getElectronicBillSchedulesController,
   deleteElectronicBillSchedule as deleteElectronicBillScheduleController,
+  getElectronicBillsFromPlemsi as getElectronicBillsFromPlemsiController,
   createSupportDocument as createSupportDocumentController,
   getSupportDocument as getSupportDocumentController,
   getSupportDocumentHTML as getSupportDocumentHTMLController,
