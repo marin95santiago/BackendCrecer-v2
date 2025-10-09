@@ -43,7 +43,7 @@ export const getElectronicInvoiceHTML = async (req: Request, res: Response, next
     const invoiceData = await plemsiDocumentService.getElectronicInvoice(entity, parsedInvoiceNumber)
 
     // Generar el HTML
-    const htmlContent = generateElectronicInvoiceHTML(invoiceData, entity)
+    const htmlContent = await generateElectronicInvoiceHTML(invoiceData, entity)
 
     // Configurar headers para HTML
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
