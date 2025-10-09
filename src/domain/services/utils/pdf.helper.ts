@@ -1,4 +1,5 @@
 import { Entity as Company } from '../../../domain/entities/Entity.entity';
+import QRCode from 'qrcode';
 
 const PREFIX_SUPPORT_DOCUMENT_PLEMSI = process.env.PREFIX_SUPPORT_DOCUMENT_PLEMSI || 'DS';
 
@@ -62,6 +63,24 @@ const formatCurrency = (amount: number | string): string => {
 const formatTime = (timeString: string): string => {
   const [hours, minutes] = timeString.split(':');
   return `${hours}:${minutes}`;
+};
+
+// Función para generar código QR como base64
+const generateQRCodeBase64 = async (data: string): Promise<string> => {
+  try {
+    const qrCodeDataURL = await QRCode.toDataURL(data, {
+      width: 200,
+      margin: 1,
+      color: {
+        dark: '#000000',
+        light: '#FFFFFF'
+      }
+    });
+    return qrCodeDataURL;
+  } catch (error) {
+    console.error('Error generando QR Code:', error);
+    return '';
+  }
 };
 
 // Función para obtener el nombre de la forma de pago
@@ -140,7 +159,7 @@ const getTaxNameById = (taxId: number): string => {
  * @param company - Información de la empresa desde la base de datos
  * @returns HTML string de la factura
  */
-export const generateElectronicInvoiceHTML = (responseData: any, company: Company): string => {
+export const generateElectronicInvoiceHTML = async (responseData: any, company: Company): Promise<string> => {
   // Extraer los datos de la factura desde la respuesta de Plemsi
   const invoice = responseData.data || responseData;
   
@@ -198,6 +217,10 @@ export const generateElectronicInvoiceHTML = (responseData: any, company: Compan
 
   // Notas de la factura
   const notes = invoice.notes || '';
+
+  // Código QR
+  const qrString = invoice.QRStr || '';
+  const qrCodeBase64 = qrString ? await generateQRCodeBase64(qrString) : '';
 
   // Generar filas de productos desde invoice_lines
   const invoiceLines = invoice.invoice_lines || [];
@@ -268,6 +291,10 @@ export const generateElectronicInvoiceHTML = (responseData: any, company: Compan
         .company-details {
           font-size: 10px;
           color: #444;
+          line-height: 1.2;
+        }
+        .company-details p {
+          margin: 1px 0;
         }
         .invoice-info {
           text-align: right;
@@ -380,7 +407,7 @@ export const generateElectronicInvoiceHTML = (responseData: any, company: Compan
           <div class="invoice-info">
             <div class="invoice-title">FACTURA ELECTRÓNICA</div>
             <div class="invoice-number">${invoiceNumber}</div>
-            <div class="resolution">Res. ${resolution}</div>
+            <div class="resolution">${resolution}</div>
             <div style="font-size: 11px; color: #555;">
               ${issueDate} ${issueTime}
             </div>
@@ -445,8 +472,17 @@ export const generateElectronicInvoiceHTML = (responseData: any, company: Compan
         ` : ''}
 
         <div class="cude-section">
-          <div><strong>CUDE/CUFE:</strong></div>
-          <div>${cude}</div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1;">
+              <div><strong>CUDE/CUFE:</strong></div>
+              <div>${cude}</div>
+            </div>
+            ${qrCodeBase64 ? `
+            <div style="margin-left: 12px; background-color: #f9f9f9; padding: 4px; border: 1px dashed #999;">
+              <img src="${qrCodeBase64}" alt="Código QR" style="width: 100px; height: 100px; border: 1px solid #333; display: block; background: white;" />
+            </div>
+            ` : ''}
+          </div>
         </div>
 
         ${errorMessage ? `
@@ -485,7 +521,7 @@ export const generateElectronicInvoiceHTML = (responseData: any, company: Compan
  * @param company - Información de la empresa desde la base de datos
  * @returns HTML string del documento soporte
  */
-export const generateElectronicSupportDocumentHTML = (responseData: any, company: Company): string => {
+export const generateElectronicSupportDocumentHTML = async (responseData: any, company: Company): Promise<string> => {
   // Extraer los datos del documento soporte desde la respuesta de Plemsi
   const supportDocument = responseData.data || responseData;
   
@@ -536,6 +572,10 @@ export const generateElectronicSupportDocumentHTML = (responseData: any, company
   const notes = supportDocument.notes || '';
   const headNote = supportDocument.head_note || '';
   const footNote = supportDocument.foot_note || '';
+
+  // Código QR
+  const qrString = supportDocument.QRStr || '';
+  const qrCodeBase64 = qrString ? await generateQRCodeBase64(qrString) : '';
 
   // Generar filas de productos desde invoice_lines
   const invoiceLines = supportDocument.invoice_lines || [];
@@ -606,6 +646,10 @@ export const generateElectronicSupportDocumentHTML = (responseData: any, company
         .company-details {
           font-size: 10px;
           color: #444;
+          line-height: 1.2;
+        }
+        .company-details p {
+          margin: 1px 0;
         }
         .invoice-info {
           text-align: right;
@@ -718,7 +762,7 @@ export const generateElectronicSupportDocumentHTML = (responseData: any, company
           <div class="invoice-info">
             <div class="invoice-title">DOCUMENTO SOPORTE ELECTRÓNICO</div>
             <div class="invoice-number">${documentNumber}</div>
-            <div class="resolution">Res. ${resolution}</div>
+            <div class="resolution">${resolution}</div>
             <div style="font-size: 11px; color: #555;">
               ${issueDate} ${issueTime}
             </div>
@@ -797,8 +841,17 @@ export const generateElectronicSupportDocumentHTML = (responseData: any, company
         ` : ''}
 
         <div class="cude-section">
-          <div><strong>CUDE/CUFE:</strong></div>
-          <div>${cude}</div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1;">
+              <div><strong>CUDE/CUFE:</strong></div>
+              <div>${cude}</div>
+            </div>
+            ${qrCodeBase64 ? `
+            <div style="margin-left: 12px; background-color: #f9f9f9; padding: 4px; border: 1px dashed #999;">
+              <img src="${qrCodeBase64}" alt="Código QR" style="width: 100px; height: 100px; border: 1px solid #333; display: block; background: white;" />
+            </div>
+            ` : ''}
+          </div>
         </div>
 
         <div style="margin-top: 8px; padding: 4px; background-color: #f7fafc; border-radius: 4px;">

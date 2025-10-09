@@ -26,7 +26,7 @@ export const getSupportDocumentHTML = async (req: Request, res: Response, next: 
     const supportDocumentData = await plemsiDocumentService.getElectronicSupportDocument(entity, cude)
 
     // Generar el HTML
-    const htmlContent = generateElectronicSupportDocumentHTML(supportDocumentData, entity)
+    const htmlContent = await generateElectronicSupportDocumentHTML(supportDocumentData, entity)
 
     // Configurar headers para HTML
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
