@@ -258,7 +258,7 @@ export const generateElectronicInvoiceHTML = async (responseData: any, company: 
     <html lang="es">
     <head>
       <meta charset="UTF-8">
-      <title>Factura Electrónica ${invoiceNumber}</title>
+      <title>Factura Electrónica De Venta ${invoiceNumber}</title>
         <style>
           @page {
             size: letter;
@@ -405,7 +405,7 @@ export const generateElectronicInvoiceHTML = async (responseData: any, company: 
             </div>
           </div>
           <div class="invoice-info">
-            <div class="invoice-title">FACTURA ELECTRÓNICA</div>
+            <div class="invoice-title">FACTURA ELECTRÓNICA DE VENTA</div>
             <div class="invoice-number">${invoiceNumber}</div>
             <div class="resolution">${resolution}</div>
             <div style="font-size: 11px; color: #555;">
@@ -501,7 +501,7 @@ export const generateElectronicInvoiceHTML = async (responseData: any, company: 
         </div>
 
         <div class="footer">
-          Este documento es una representación impresa de la factura electrónica.  
+          Este documento es una representación impresa de la factura electrónica de venta.  
           Consulte el CUDE/CUFE en la DIAN para verificar su validez.
         </div>
         
