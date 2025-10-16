@@ -862,7 +862,7 @@ export const generateElectronicSupportDocumentHTML = async (responseData: any, c
         </div>
 
         <div class="footer">
-          Este documento es una representación impresa del documento soporte electrónico.  
+          Representación gráfica de la factura electrónica de venta. Esta factura se asimila en todos sus efectos legales a un título valor según ley 1231 de julio 17 de 2008.
           Consulte el CUDE/CUFE en la DIAN para verificar su validez.
         </div>
         
