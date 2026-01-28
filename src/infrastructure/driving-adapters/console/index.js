@@ -28,6 +28,37 @@ const contables = [
   }
 ]
 
+const contables_seminario = [
+  {
+    idItem: '01',
+    cuenta_contable: '4160050100'
+  },
+  {
+    idItem: '02',
+    cuenta_contable: '4160050200'
+  },
+  {
+    idItem: '03',
+    cuenta_contable: '4160050300'
+  },
+  {
+    idItem: '04',
+    cuenta_contable: '4160050500'
+  },
+  {
+    idItem: '05',
+    cuenta_contable: '4160050200'
+  },
+  {
+    idItem: '06',
+    cuenta_contable: '4160050300'
+  },
+  {
+    idItem: '07',
+    cuenta_contable: '4160050300'
+  }
+]
+
 const cuenta_contable_col = '1615050100'
 
 async function generateData(dataS) {
@@ -50,6 +81,7 @@ async function generateData(dataS) {
       let registerD;
       let cuentaContable;
 
+      // Cuando quiera exportar seminarios, usar contables de seminario, caso de colegios usar contables.
       cuentaContable = contables.find(contable => contable.idItem === item.code)
 
       registerC = {
