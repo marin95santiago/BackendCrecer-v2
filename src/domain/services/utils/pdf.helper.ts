@@ -485,13 +485,6 @@ export const generateElectronicInvoiceHTML = async (responseData: any, company: 
           </div>
         </div>
 
-        ${errorMessage ? `
-        <div style="border: 1px solid #f56565; background-color: #fed7d7; padding: 4px; margin-top: 8px; border-radius: 4px;">
-          <div style="color: #c53030; font-weight: bold; font-size: 10px;">⚠️ Advertencia:</div>
-          <div style="color: #742a2a; font-size: 9px; margin-top: 2px;">${errorMessage}</div>
-        </div>
-        ` : ''}
-
         <div style="margin-top: 8px; padding: 4px; background-color: #f7fafc; border-radius: 4px;">
           <div style="font-size: 9px; color: #4a5568;">
             <strong>Estado:</strong> ${status} | 
