@@ -2,9 +2,6 @@ import { NextFunction, Request, Response } from 'express'
 import { DynamoDBEntityRepository } from '../../../../implementations/AWS/dynamoDB/DynamoDBEntityRepository'
 import { PlemsiDocumentService } from '../../../../../domain/services/electronicBill/PlemsiDocument.service'
 import { generateElectronicInvoiceHTML } from '../../../../../domain/services/utils/pdf.helper'
-import { validatePermission } from '../../utils'
-import permissionsList from '../../permission.json'
-import { PermissionNotAvailableException } from '../../../../../domain/exceptions/common/PermissionNotAvailable.exception'
 
 export const getElectronicInvoiceHTML = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   console.log('🔍 getElectronicInvoiceHTML - Full req.params:', req.params)

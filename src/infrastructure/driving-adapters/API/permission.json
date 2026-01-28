@@ -12,6 +12,7 @@
   "electronic_bill": {
     "view": "electronic_bill_view",
     "create": "electronic_bill_create",
+    "present_credit_note": "electronic_bill_present_credit_note",
     "list": "electronic_bill_list",
     "schedule_create": "electronic_bill_schedule_create",
     "schedule_view": "electronic_bill_schedule_view",

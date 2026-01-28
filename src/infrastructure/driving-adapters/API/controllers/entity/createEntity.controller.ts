@@ -21,6 +21,13 @@ export const createEntity = async (req: Request, res: Response, next: NextFuncti
     resolution,
     resolutionText,
     lastElectronicBillNumber,
+    resolutionNC,
+    resolutionTextNC,
+    lastCreditNumber,
+    prefixNC,
+    resolutionDS,
+    resolutionTextDS,
+    lastSupportDocumentNumber,
     receiptNumbers,
     prefix
   } = req.body
@@ -52,6 +59,13 @@ export const createEntity = async (req: Request, res: Response, next: NextFuncti
       resolution,
       resolutionText,
       lastElectronicBillNumber,
+      resolutionNC,
+      resolutionTextNC,
+      lastCreditNumber,
+      prefixNC,
+      resolutionDS,
+      resolutionTextDS,
+      lastSupportDocumentNumber,
       prefix,
       receiptNumbers: receiptNumbers.map((rn: any) => {
         return {
