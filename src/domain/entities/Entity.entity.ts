@@ -39,6 +39,10 @@ export interface Entity {
   resolutionTextDS?: string,
   lastElectronicBillNumber?: number
   lastSupportDocumentNumber?: number
+  resolutionNC?: string
+  resolutionTextNC?: string
+  prefixNC?: string
+  lastCreditNumber?: number
   receiptNumbers?: ReceiptNumbers[],
   prefix?: string
 }
