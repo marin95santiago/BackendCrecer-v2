@@ -8,6 +8,7 @@ import {
   getElectronicInvoiceHTMLController,
   getElectronicBillSchedulesController,
   getElectronicBillsFromPlemsiController,
+  getCreditNotesFromPlemsiController,
   presentElectronicBillCreditNoteController
 } from '../controllers/index'
 
@@ -15,6 +16,7 @@ const route = Router()
 
 route.get('/electronic', validateToken, getAllElectronicBillsController)
 route.get('/electronic/plemsi', validateToken, getElectronicBillsFromPlemsiController)
+route.get('/electronic/credit/plemsi', validateToken, getCreditNotesFromPlemsiController)
 route.get('/electronic/schedule', validateToken, getElectronicBillSchedulesController)
 route.delete('/electronic/schedule/:code', validateToken, deleteElectronicBillScheduleController)
 route.get('/electronic/:number', validateToken, getElectronicBillByNumberController)

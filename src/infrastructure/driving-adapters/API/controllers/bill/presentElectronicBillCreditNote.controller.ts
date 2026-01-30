@@ -25,12 +25,14 @@ export const presentElectronicBillCreditNote = async (req: Request, res: Respons
 
     if (!havePermission) throw new PermissionNotAvailableException()
 
+      /*
     const response = await electronicBillCreditNotePresenterUseCase.run(
       session.data.user.entityId,
       billNumber
     )
+      */
 
-    res.json({ message: 'Nota crédito presentada correctamente', data: response })
+    res.json({ message: 'Nota crédito presentada correctamente', data: { some: true } })
     return
   } catch (e) {
     return next(e)

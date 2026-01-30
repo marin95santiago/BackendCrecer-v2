@@ -20,6 +20,7 @@ import { getElectronicInvoiceHTML } from './bill/getElectronicInvoiceHTML.contro
 import { getSchedules as getElectronicBillSchedules } from './bill/getSchedules.controller'
 import { deleteSchedule as deleteElectronicBillSchedule } from './bill/deleteSchedule.controller'
 import { getElectronicBillsFromPlemsi } from './bill/getElectronicBillsFromPlemsi.controller'
+import { getCreditNotesFromPlemsi } from './bill/getCreditNotesFromPlemsi.controller'
 import { presentElectronicBillCreditNote } from './bill/presentElectronicBillCreditNote.controller'
 
 // Support Document
@@ -83,6 +84,7 @@ export {
   getElectronicBillSchedules as getElectronicBillSchedulesController,
   deleteElectronicBillSchedule as deleteElectronicBillScheduleController,
   getElectronicBillsFromPlemsi as getElectronicBillsFromPlemsiController,
+  getCreditNotesFromPlemsi as getCreditNotesFromPlemsiController,
   presentElectronicBillCreditNote as presentElectronicBillCreditNoteController,
   createSupportDocument as createSupportDocumentController,
   getSupportDocument as getSupportDocumentController,
