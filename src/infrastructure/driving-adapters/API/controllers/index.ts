@@ -67,6 +67,9 @@ import { getReceiptByCode } from './receipt/getReceiptByCode.controller'
 import { dailyReportReceipt } from './receipt/dailyReportReceipt.controller'
 import { cancelReceipt } from './receipt/cancelReceipt.controller'
 
+// Email
+import { sendEmail } from './email/sendEmail.controller'
+
 export {
   createUser as createUserController,
   getAllUsers as getAllUsersController,
@@ -115,5 +118,6 @@ export {
   getCostCenterByCode as getCostCenterByCodeController,
   getReceiptByCode as getReceiptByCodeController,
   dailyReportReceipt as dailyReportReceiptController,
-  cancelReceipt as cancelReceiptController
+  cancelReceipt as cancelReceiptController,
+  sendEmail as sendEmailController
 }
