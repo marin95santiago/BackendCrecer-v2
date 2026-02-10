@@ -19,6 +19,10 @@ import { MissingPropertyException } from '../../../../domain/exceptions/common/M
 import { EntityAlreadyExistException } from '../../../../domain/exceptions/entity/EntityAlreadyExist.exception'
 import { UnhandledException } from '../../../../domain/exceptions/common/Unhandled.exception'
 import { AlreadyExistException } from '../../../../domain/exceptions/common/AlreadyExist.exception'
+import { ControlUserBlockedException } from '../../../../domain/exceptions/user/ControlUserBlocked.exception'
+import { ControlCodeExpiredException } from '../../../../domain/exceptions/user/ControlCodeExpired.exception'
+import { WrongControlCodeException } from '../../../../domain/exceptions/user/WrongControlCode.exception'
+import { UserNotControlUserException } from '../../../../domain/exceptions/user/UserNotControlUser.exception'
 
 const route = Router()
 
@@ -67,7 +71,24 @@ route.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   } else if (err instanceof AlreadyExistException) {
     res.status(400).json({
       message: err.message
-    }) 
+    })
+  } else if (err instanceof ControlUserBlockedException) {
+    res.status(403).json({
+      message: err.message,
+      blockedUntil: err.blockedUntil
+    })
+  } else if (err instanceof ControlCodeExpiredException) {
+    res.status(400).json({
+      message: err.message
+    })
+  } else if (err instanceof WrongControlCodeException) {
+    res.status(400).json({
+      message: err.message
+    })
+  } else if (err instanceof UserNotControlUserException) {
+    res.status(400).json({
+      message: err.message
+    })
   } else {
     next(err)
   }
