@@ -8,26 +8,32 @@ import { ControlUserBlockedException } from '../../../domain/exceptions/user/Con
 
 const CODE_VALIDITY_MS = 5 * 60 * 1000
 const BLOCK_DURATION_MS = 2 * 60 * 60 * 1000
-const ALPHANUM = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-function randomCode (length: number): string {
-  let result = ''
-  for (let i = 0; i < length; i++) {
-    result += ALPHANUM[Math.floor(Math.random() * ALPHANUM.length)]
-  }
-  return result
-}
 
 export class RequestControlCodeUseCase {
   private readonly _getUserByEmailService: GetUserByEmailService
+  private readonly _authCodeChars: string
+
   constructor (
     private readonly _userRepository: UserRepository,
     private readonly _authTokenRepository: AuthTokenRepository,
     private readonly _emailSender: IEmailSender,
     private readonly _controlUserDomain: string,
-    private readonly _masterEmail: string
+    private readonly _masterEmail: string,
+    authCodeChars: string
   ) {
+    const chars = authCodeChars.trim()
+    if (chars.length === 0) throw new Error('AUTH_CODE_CHARS no puede estar vacío')
     this._getUserByEmailService = new GetUserByEmailService(_userRepository)
+    this._authCodeChars = chars
+  }
+
+  private randomCode (length: number): string {
+    const chars = this._authCodeChars
+    let result = ''
+    for (let i = 0; i < length; i++) {
+      result += chars[Math.floor(Math.random() * chars.length)]
+    }
+    return result
   }
 
   async run (email: string, clientIp: string): Promise<{ sent: true }> {
@@ -84,7 +90,7 @@ export class RequestControlCodeUseCase {
       }
     }
 
-    const code = randomCode(6)
+    const code = this.randomCode(6)
     const expiration = now + CODE_VALIDITY_MS
 
     await this._authTokenRepository.saveCode(emailLower, {
