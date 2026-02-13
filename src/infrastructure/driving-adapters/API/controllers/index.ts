@@ -11,6 +11,8 @@ import { getEntityById } from './entity/getEntityById.controller'
 
 // Login controller
 import { login } from './login/login.controller'
+import { requestControlCode } from './login/requestControlCode.controller'
+import { verifyControlCode } from './login/verifyControlCode.controller'
 
 // Bill
 import { createElectronicBill } from './bill/createElectronicBill.controller'
@@ -67,6 +69,9 @@ import { getReceiptByCode } from './receipt/getReceiptByCode.controller'
 import { dailyReportReceipt } from './receipt/dailyReportReceipt.controller'
 import { cancelReceipt } from './receipt/cancelReceipt.controller'
 
+// Email
+import { sendEmail } from './email/sendEmail.controller'
+
 export {
   createUser as createUserController,
   getAllUsers as getAllUsersController,
@@ -77,6 +82,8 @@ export {
   getAllEntities as getAllEntitiesController,
   getEntityById as getEntityByIdController,
   login as loginController,
+  requestControlCode as requestControlCodeController,
+  verifyControlCode as verifyControlCodeController,
   createElectronicBill as createElectronicBillController,
   getAllElectronicBills as getAllElectronicBillsController,
   getElectronicBillByNumber as getElectronicBillByNumberController,
@@ -115,5 +122,6 @@ export {
   getCostCenterByCode as getCostCenterByCodeController,
   getReceiptByCode as getReceiptByCodeController,
   dailyReportReceipt as dailyReportReceiptController,
-  cancelReceipt as cancelReceiptController
+  cancelReceipt as cancelReceiptController,
+  sendEmail as sendEmailController
 }

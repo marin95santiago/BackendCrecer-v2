@@ -1,5 +1,6 @@
 {
   "super_admin": "super_admin",
+  "control_user": "control_user",
   "user": {
     "view": "user_view",
     "create": "user_create",
