@@ -23,6 +23,10 @@ export class EntityCreatorUseCase {
     const existEntity: boolean = await this._existEntityByDocumentService.run(body.document)
     if (existEntity) throw new EntityAlreadyExistException()
 
+    if (body.planExpiredAt === undefined) {
+      body.planExpiredAt = new Date().toISOString()
+    }
+
     await this._entityRepository.save(body)
 
     return body

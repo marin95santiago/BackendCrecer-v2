@@ -41,7 +41,8 @@ export class DynamoDBEntityRepository implements EntityRepository {
         resolutionTextNC: entity.resolutionTextNC ?? undefined,
         prefixNC: entity.prefixNC ?? undefined,
         lastCreditNumber: entity.lastCreditNumber ? Number(entity.lastCreditNumber) : undefined,
-        receiptNumbers: entity.receiptNumbers ?? undefined
+        receiptNumbers: entity.receiptNumbers ?? undefined,
+        planExpiredAt: entity.planExpiredAt ?? undefined
       }, { removeUndefinedValues: true })
     }
     await this.client.send(new PutItemCommand(params))
@@ -163,7 +164,8 @@ export class DynamoDBEntityRepository implements EntityRepository {
               }
             })
           )
-        : undefined
+        : undefined,
+      planExpiredAt: item.planExpiredAt?.S ?? undefined
     }
 
     return entity
@@ -255,7 +257,8 @@ export class DynamoDBEntityRepository implements EntityRepository {
               }
             })
           )
-        : undefined
+        : undefined,
+      planExpiredAt: item.planExpiredAt?.S ?? undefined
     }
 
     return entity
@@ -287,7 +290,8 @@ export class DynamoDBEntityRepository implements EntityRepository {
         resolutionTextNC: entity.resolutionTextNC ?? undefined,
         prefixNC: entity.prefixNC ?? undefined,
         lastCreditNumber: entity.lastCreditNumber ? Number(entity.lastCreditNumber) : undefined,
-        receiptNumbers: entity.receiptNumbers ?? undefined
+        receiptNumbers: entity.receiptNumbers ?? undefined,
+        planExpiredAt: entity.planExpiredAt ?? undefined
       })
     }
     await this.client.send(new PutItemCommand(params))

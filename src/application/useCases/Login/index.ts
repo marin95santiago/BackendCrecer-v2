@@ -31,6 +31,7 @@ export class LoginUseCase {
 
     // call entity information
     const entity = await this._getEntityByIdService.run(userToLogin.entityId)
+    console.log('[Login] entity recuperada:', JSON.stringify(entity, null, 2))
     
     // protect password
     delete userToLogin.password
