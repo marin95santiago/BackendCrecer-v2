@@ -45,4 +45,5 @@ export interface Entity {
   lastCreditNumber?: number
   receiptNumbers?: ReceiptNumbers[],
   prefix?: string
+  planExpiredAt?: string
 }
