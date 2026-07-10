@@ -18,15 +18,13 @@ export class ElectronicBillGetterFromPlemsiUseCase {
     this._getEntityByIdService = new GetEntityByIdService(entityRepository)
   }
 
-  async run (entityId: string, page: number): Promise<{ data: any }> {
+  async run (entityId: string, limit: number): Promise<{ data: any }> {
     try {
       const entity = await this._getEntityByIdService.run(entityId || '')
       if (entity) {
-        // Get electronic bills from Plemsi
-        const response = await this._billPlemsiService.run(entity.apiKeyPlemsi ?? '', page)
+        const response = await this._billPlemsiService.run(entity.apiKeyPlemsi ?? '', limit)
 
-        // Plemsi returns: { code, success, info, data: { totalDocuments, docs, page, perPage } }
-        // We return the inner data object
+        // Plemsi returns: { code, success, info, data: { totalDocuments, docs, limit, searchAfter, searchBefore } }
         return { data: response.data.data }
 
       } else {

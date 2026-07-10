@@ -7,7 +7,7 @@ import { ElectronicBillGetterFromPlemsiUseCase } from '../../../../../applicatio
 
 export const getElectronicBillsFromPlemsi = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { sessionUser } = req.params
-  const { page } = req.query
+  const { limit } = req.query
 
   const dynamoDBEntityRepository = new DynamoDBEntityRepository()
   const electronicBillGetterFromPlemsiUseCase = new ElectronicBillGetterFromPlemsiUseCase(dynamoDBEntityRepository)
@@ -18,7 +18,8 @@ export const getElectronicBillsFromPlemsi = async (req: Request, res: Response, 
     const havePermission = validatePermission(permissionsList.electronic_bill.list, session.data.user.permissions, doesSuperAdminHavePermission)
     if (!havePermission) throw new PermissionNotAvailableException()
 
-    const electronicBillList = await electronicBillGetterFromPlemsiUseCase.run(session.data.user.entityId, Number(page))
+    const limitValue = Number(limit) || 200
+    const electronicBillList = await electronicBillGetterFromPlemsiUseCase.run(session.data.user.entityId, limitValue)
 
     res.json(electronicBillList)
   } catch (error) {
