@@ -97,6 +97,33 @@ export class PlemsiDocumentService {
   }
 
   /**
+   * Obtiene una nota crédito electrónica por CUDE
+   * @param entity - Entidad con información de la empresa
+   * @param cude - CUDE de la nota crédito
+   * @returns Datos de la nota crédito electrónica
+   */
+  async getElectronicCreditNote(entity: Entity, cude: string) {
+    try {
+      if (!entity.apiKeyPlemsi) {
+        throw new Error('Clave de Plemsi no configurada para esta entidad');
+      }
+
+      const url = `${URL_PLEMSI}/billing/credit/one?by=cude&value=${cude}`;
+
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${entity.apiKeyPlemsi}`
+        }
+      });
+
+      return response.data;
+    } catch (error: any) {
+      console.log('Error obteniendo nota crédito electrónica:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Obtiene el listado de documentos soporte electrónicos desde Plemsi
    * @param entity - Entidad con información de la empresa
    * @param page - Número de página

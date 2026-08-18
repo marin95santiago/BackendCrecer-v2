@@ -19,6 +19,7 @@ import { createElectronicBill } from './bill/createElectronicBill.controller'
 import { getAllElectronicBills } from './bill/getAllElectronicBills.controller'
 import { getElectronicBillByNumber } from './bill/getElectronicBillByNumber.controller'
 import { getElectronicInvoiceHTML } from './bill/getElectronicInvoiceHTML.controller'
+import { getElectronicCreditNoteHTML } from './bill/getElectronicCreditNoteHTML.controller'
 import { getSchedules as getElectronicBillSchedules } from './bill/getSchedules.controller'
 import { deleteSchedule as deleteElectronicBillSchedule } from './bill/deleteSchedule.controller'
 import { getElectronicBillsFromPlemsi } from './bill/getElectronicBillsFromPlemsi.controller'
@@ -88,6 +89,7 @@ export {
   getAllElectronicBills as getAllElectronicBillsController,
   getElectronicBillByNumber as getElectronicBillByNumberController,
   getElectronicInvoiceHTML as getElectronicInvoiceHTMLController,
+  getElectronicCreditNoteHTML as getElectronicCreditNoteHTMLController,
   getElectronicBillSchedules as getElectronicBillSchedulesController,
   deleteElectronicBillSchedule as deleteElectronicBillScheduleController,
   getElectronicBillsFromPlemsi as getElectronicBillsFromPlemsiController,
