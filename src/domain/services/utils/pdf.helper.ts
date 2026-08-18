@@ -868,3 +868,427 @@ export const generateElectronicSupportDocumentHTML = async (responseData: any, c
 
   return htmlContent;
 };
+
+/**
+ * Genera el HTML para la nota crédito electrónica
+ * @param responseData - Datos de la nota crédito desde Plemsi
+ * @param company - Información de la entidad
+ * @returns HTML string de la nota crédito
+ */
+export const generateElectronicCreditNoteHTML = async (responseData: any, company: Company): Promise<string> => {
+  const creditNote = responseData.data || responseData;
+
+  const companyName = company.name;
+  const companyId = company.document;
+  let companyAddress = 'N/A';
+  if (company.address) {
+    companyAddress = `${company.address.description}, ${company.address.city.description}`;
+  }
+  const companyPhone = company.phone;
+  const companyEmail = company.email;
+
+  const customerName = creditNote.customer?.name || 'Cliente no especificado';
+  const customerId = creditNote.customer?.identification_number || 'N/A';
+  const customerAddress = creditNote.customer?.address || 'N/A';
+  const customerEmail = creditNote.customer?.email || 'N/A';
+  const customerPhone = creditNote.customer?.phone || 'N/A';
+
+  const documentNumber = `${creditNote.prefix || ''} ${creditNote.number || ''}`.trim();
+  let resolution = 'N/A';
+  if (creditNote.resolutionText) {
+    resolution = creditNote.resolutionText;
+  } else if (company.resolutionTextNC) {
+    resolution = company.resolutionTextNC;
+  }
+  const issueDate = formatDate(creditNote.date || new Date().toISOString());
+  const issueTime = formatTime(creditNote.time || '00:00');
+  const cude = creditNote.cude || 'N/A';
+  const consecutive = creditNote.consecutive || 'N/A';
+
+  const billingReferenceNumber = creditNote.billing_reference?.number || 'N/A';
+  const billingReferenceDate = creditNote.billing_reference?.issue_date || 'N/A';
+  const discrepancyDescription = creditNote.discrepancyresponsedescription || 'N/A';
+
+  const subtotal = formatCurrency(creditNote.legal_monetary_totals?.line_extension_amount || 0);
+  const taxBase = formatCurrency(creditNote.legal_monetary_totals?.tax_exclusive_amount || 0);
+  const iva = formatCurrency(
+    (parseFloat(creditNote.legal_monetary_totals?.tax_inclusive_amount || '0') -
+     parseFloat(creditNote.legal_monetary_totals?.tax_exclusive_amount || '0'))
+  );
+  const total = formatCurrency(creditNote.legal_monetary_totals?.payable_amount || 0);
+
+  const totalAmount = parseFloat(creditNote.legal_monetary_totals?.payable_amount || '0');
+  const totalInWords = numberToWords(Math.floor(totalAmount)) + ' pesos colombianos';
+
+  const status = creditNote.state;
+  const isValid = creditNote.response?.data?.IsValid === 'true';
+  const emailStatus = creditNote.emailDeliveryStatus;
+
+  const notes = creditNote.notes || '';
+  const headNote = creditNote.head_note || '';
+  const footNote = creditNote.foot_note || '';
+  const techProviderFootNote = creditNote.techProviderDefaultFootNote || '';
+
+  const qrString = creditNote.QRStr || '';
+  let qrCodeBase64 = '';
+  if (qrString) {
+    qrCodeBase64 = await generateQRCodeBase64(qrString);
+  }
+
+  const creditNoteLines = creditNote.credit_note_lines || [];
+  const productRows = creditNoteLines.map((line: any, index: number) => {
+    const quantity = line.invoiced_quantity || '0';
+    const unitPrice = formatCurrency(line.price_amount || 0);
+    const lineTotal = formatCurrency(line.line_extension_amount || 0);
+    const productName = line.description || 'Producto/Servicio';
+    const code = line.code || `ITEM-${String(index + 1).padStart(3, '0')}`;
+    const lineNotes = line.notes || '';
+
+    const taxInfo = line.tax_totals?.[0];
+    const taxAmount = formatCurrency(taxInfo?.tax_amount || 0);
+    const taxId = taxInfo?.tax_id;
+    let taxName = 'N/A';
+    if (taxId) {
+      taxName = getTaxNameById(taxId);
+    }
+    let taxPercent = '';
+    if (taxInfo?.percent) {
+      taxPercent = `${taxInfo.percent}%`;
+    }
+
+    let notesHtml = '';
+    if (lineNotes) {
+      notesHtml = `<br/><span style="font-size: 9px; color: #666;">${lineNotes}</span>`;
+    }
+
+    return `
+      <tr>
+        <td>${code}</td>
+        <td><strong>${productName}</strong>${notesHtml}</td>
+        <td>UN</td>
+        <td>${quantity}</td>
+        <td>${unitPrice}</td>
+        <td>${taxName} ${taxPercent}<br/>${taxAmount}</td>
+        <td>${lineTotal}</td>
+      </tr>
+    `;
+  }).join('');
+
+  let footerText = 'Esta es una representación impresa de la nota crédito electrónica. Consulte el CUDE en la DIAN para verificar su validez.';
+  if (techProviderFootNote) {
+    footerText = techProviderFootNote;
+  }
+
+  let headNoteSection = '';
+  if (headNote) {
+    headNoteSection = `
+        <div class="cude-section">
+          <div><strong>NOTA DE ENCABEZADO:</strong></div>
+          <div>${headNote}</div>
+        </div>
+        `;
+  }
+
+  let notesSection = '';
+  if (notes) {
+    notesSection = `
+        <div class="cude-section">
+          <div><strong>NOTAS:</strong></div>
+          <div>${notes}</div>
+        </div>
+        `;
+  }
+
+  let footNoteSection = '';
+  if (footNote) {
+    footNoteSection = `
+        <div class="cude-section">
+          <div><strong>NOTA DE PIE:</strong></div>
+          <div>${footNote}</div>
+        </div>
+        `;
+  }
+
+  let qrSection = '';
+  if (qrCodeBase64) {
+    qrSection = `
+            <div style="margin-left: 12px; background-color: #f9f9f9; padding: 4px; border: 1px dashed #999;">
+              <img src="${qrCodeBase64}" alt="Código QR" style="width: 100px; height: 100px; border: 1px solid #333; display: block; background: white;" />
+            </div>
+            `;
+  }
+
+  let isValidLabel = 'No';
+  if (isValid) {
+    isValidLabel = 'Sí';
+  }
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Nota Crédito Electrónica ${documentNumber}</title>
+        <style>
+          @page {
+            size: letter;
+            margin: 0.5in;
+          }
+          body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #111;
+            background: #fff;
+            font-size: 11px;
+            line-height: 1.3;
+          }
+          .invoice-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+          }
+        .header {
+          display: flex;
+          justify-content: space-between;
+          border-bottom: 2px solid #2563eb;
+          padding-bottom: 8px;
+          margin-bottom: 12px;
+        }
+        .company-info h1 {
+          font-size: 16px;
+          margin-bottom: 4px;
+          color: #1e3a8a;
+        }
+        .company-details {
+          font-size: 10px;
+          color: #444;
+          line-height: 1.2;
+        }
+        .company-details p {
+          margin: 1px 0;
+        }
+        .invoice-info {
+          text-align: right;
+        }
+        .invoice-title {
+          font-size: 14px;
+          font-weight: bold;
+        }
+        .invoice-number {
+          font-size: 16px;
+          font-weight: bold;
+          margin-top: 2px;
+          color: #111827;
+        }
+        .resolution {
+          font-size: 10px;
+          color: #666;
+        }
+        .parties {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+          margin-bottom: 12px;
+        }
+        .party-section {
+          border: 1px solid #ccc;
+          padding: 6px;
+          border-radius: 4px;
+        }
+        .party-section h3 {
+          background: #f3f4f6;
+          padding: 3px;
+          font-size: 11px;
+          font-weight: bold;
+          margin-bottom: 4px;
+          text-transform: uppercase;
+        }
+        .party-info p {
+          margin: 1px 0;
+          font-size: 10px;
+        }
+        .reference-section {
+          border: 1px solid #ccc;
+          padding: 6px;
+          border-radius: 4px;
+          margin-bottom: 12px;
+          font-size: 10px;
+        }
+        .reference-section h3 {
+          background: #f3f4f6;
+          padding: 3px;
+          font-size: 11px;
+          font-weight: bold;
+          margin-bottom: 4px;
+          text-transform: uppercase;
+        }
+        .items-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 12px;
+          font-size: 10px;
+        }
+        .items-table th, .items-table td {
+          border: 1px solid #444;
+          padding: 4px;
+        }
+        .items-table th {
+          background: #e5e7eb;
+          font-weight: bold;
+          text-align: center;
+        }
+        .items-table td {
+          text-align: center;
+        }
+        .totals {
+          width: 240px;
+          margin-left: auto;
+          font-size: 11px;
+        }
+        .total-row {
+          display: flex;
+          justify-content: space-between;
+          border-bottom: 1px solid #ccc;
+          padding: 3px 0;
+        }
+        .total-row.final {
+          border-top: 2px solid #000;
+          border-bottom: 2px solid #000;
+          font-weight: bold;
+          background: #f3f4f6;
+        }
+        .total-in-words {
+          margin-top: 8px;
+          font-style: italic;
+          font-size: 10px;
+          color: #444;
+        }
+        .cude-section {
+          border: 1px solid #ccc;
+          padding: 6px;
+          margin-top: 12px;
+          font-size: 9px;
+          word-break: break-word;
+        }
+        .footer {
+          margin-top: 12px;
+          font-size: 9px;
+          color: #555;
+          border-top: 1px solid #ccc;
+          padding-top: 6px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="invoice-container">
+        <div class="header">
+          <div class="company-info">
+            <h1>${companyName}</h1>
+            <div class="company-details">
+              <p>NIT: ${companyId}</p>
+              <p>${companyAddress}</p>
+              <p>Tel: ${companyPhone} | Email: ${companyEmail}</p>
+            </div>
+          </div>
+          <div class="invoice-info">
+            <div class="invoice-title">NOTA CRÉDITO ELECTRÓNICA</div>
+            <div class="invoice-number">${documentNumber}</div>
+            <div class="resolution">Resolución: ${resolution}</div>
+            <div style="font-size: 11px; color: #555;">
+              ${issueDate} ${issueTime}
+            </div>
+          </div>
+        </div>
+
+        <div class="parties">
+          <div class="party-section">
+            <h3>Emisor</h3>
+            <div class="party-info">
+              <p><strong>${companyName}</strong></p>
+              <p>NIT: ${companyId}</p>
+              <p>${companyAddress}</p>
+              <p>Tel: ${companyPhone}</p>
+              <p>Email: ${companyEmail}</p>
+            </div>
+          </div>
+          <div class="party-section">
+            <h3>Adquiriente</h3>
+            <div class="party-info">
+              <p><strong>${customerName}</strong></p>
+              <p>Identificación: ${customerId}</p>
+              <p>Dirección: ${customerAddress}</p>
+              <p>Teléfono: ${customerPhone}</p>
+              <p>Email: ${customerEmail}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reference-section">
+          <h3>Documento de referencia</h3>
+          <p><strong>Factura afectada:</strong> ${billingReferenceNumber}</p>
+          <p><strong>Fecha factura:</strong> ${billingReferenceDate}</p>
+          <p><strong>Motivo:</strong> ${discrepancyDescription}</p>
+        </div>
+
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Descripción</th>
+              <th>U/M</th>
+              <th>Cantidad</th>
+              <th>Precio Unit.</th>
+              <th>Impuestos</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${productRows}
+          </tbody>
+        </table>
+
+        <div class="totals">
+          <div class="total-row"><span>SUBTOTAL:</span><span>${subtotal}</span></div>
+          <div class="total-row"><span>BASE IMPUESTOS:</span><span>${taxBase}</span></div>
+          <div class="total-row"><span>IVA:</span><span>${iva}</span></div>
+          <div class="total-row final"><span>TOTAL:</span><span>${total}</span></div>
+        </div>
+
+        <div class="total-in-words"><strong>Total en letras:</strong> ${totalInWords}</div>
+
+        ${headNoteSection}
+
+        ${notesSection}
+
+        ${footNoteSection}
+
+        <div class="cude-section">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1;">
+              <div><strong>CUDE:</strong></div>
+              <div>${cude}</div>
+            </div>
+            ${qrSection}
+          </div>
+        </div>
+
+        <div style="margin-top: 8px; padding: 4px; background-color: #f7fafc; border-radius: 4px;">
+          <div style="font-size: 9px; color: #4a5568;">
+            <strong>Estado:</strong> ${status} |
+            <strong>Válida:</strong> ${isValidLabel} |
+            <strong>Consecutivo:</strong> ${consecutive} |
+            <strong>Email:</strong> ${emailStatus || 'N/A'}
+          </div>
+        </div>
+
+        <div class="footer">
+          ${footerText}
+        </div>
+
+        <div style="height: 20px;"></div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return htmlContent;
+};
